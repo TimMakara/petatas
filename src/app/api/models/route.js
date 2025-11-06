@@ -60,6 +60,7 @@ export async function GET(request) {
       status: 200,
       headers: {
         'Content-Type': contentType,
+        'Content-Disposition': `inline; filename="${modelFile}"`,
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET',
         'Access-Control-Allow-Headers': 'Content-Type',

@@ -4,16 +4,44 @@ import { useEffect, useRef, useState } from 'react';
 
 export default function ModelViewer() {
   const canvasRef = useRef(null);
-  const [modelUrl, setModelUrl] = useState('/api/models?file=sample-cube.glb');
+  const [modelUrl, setModelUrl] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [availableModels, setAvailableModels] = useState([]);
+  const [modelsLoading, setModelsLoading] = useState(true);
+
+  // Fetch available models on component mount
+  useEffect(() => {
+    async function fetchModels() {
+      try {
+        const response = await fetch('/api/models/list');
+        if (!response.ok) {
+          throw new Error('Failed to fetch models');
+        }
+        const data = await response.json();
+        setAvailableModels(data.models);
+        
+        // Set the first model as default if available
+        if (data.models.length > 0 && !modelUrl) {
+          setModelUrl(`/api/models?file=${data.models[0].name}`);
+        }
+      } catch (err) {
+        console.error('Error fetching models:', err);
+        setError('Failed to load available models');
+      } finally {
+        setModelsLoading(false);
+      }
+    }
+
+    fetchModels();
+  }, [modelUrl]);
 
   useEffect(() => {
     // This is a placeholder for a 3D model viewer implementation
     // In a real implementation, you would use a library like Three.js, Babylon.js, or model-viewer
     
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !modelUrl) return;
 
     // Simulate loading
     setTimeout(() => {
@@ -48,17 +76,27 @@ export default function ModelViewer() {
         
         <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">Model Selection</h2>
-          <div className="flex items-center space-x-4">
-            <label htmlFor="model-select" className="text-gray-700">Choose a model:</label>
-            <select 
-              id="model-select"
-              onChange={handleModelChange}
-              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="sample-cube.glb">Sample Cube</option>
-              {/* Add more models as they become available */}
-            </select>
-          </div>
+          {modelsLoading ? (
+            <div className="text-gray-500">Loading available models...</div>
+          ) : availableModels.length === 0 ? (
+            <div className="text-gray-500">No models found. Add 3D model files to the public/models directory.</div>
+          ) : (
+            <div className="flex items-center space-x-4">
+              <label htmlFor="model-select" className="text-gray-700">Choose a model:</label>
+              <select
+                id="model-select"
+                onChange={handleModelChange}
+                value={modelUrl ? modelUrl.replace('/api/models?file=', '') : ''}
+                className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {availableModels.map((model) => (
+                  <option key={model.name} value={model.name}>
+                    {model.displayName} ({model.extension.toUpperCase()}, {(model.size / 1024 / 1024).toFixed(2)} MB)
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-6">
