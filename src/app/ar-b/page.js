@@ -228,11 +228,12 @@ export default function ARBPage() {
   const loadModelForScene = async (sceneIndex) => {
     try {
       const scene = scenes[sceneIndex];
-      console.log(`Loading ${scene.name} model...`);
+      addLog(`🔧 Loading ${scene.name} from ${scene.model}...`);
 
       const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
       const loader = new GLTFLoader();
       const modelUrl = window.location.origin + scene.model;
+      addLog(`📡 Model URL: ${modelUrl}`);
 
       return new Promise((resolve, reject) => {
         loader.load(
@@ -240,18 +241,23 @@ export default function ARBPage() {
           (gltf) => {
             const model = gltf.scene;
             model.scale.set(scene.scale, scene.scale, scene.scale);
-            console.log(`✅ ${scene.name} model loaded!`);
+            addLog(`✅ ${scene.name} GLB loaded successfully!`);
             resolve(model);
           },
-          undefined,
+          (progress) => {
+            if (progress.lengthComputable) {
+              const percent = (progress.loaded / progress.total * 100).toFixed(0);
+              addLog(`⏳ Loading ${scene.name}: ${percent}%`);
+            }
+          },
           (error) => {
-            console.error(`Error loading ${scene.name} model:`, error);
+            addLog(`❌ Error loading ${scene.name}: ${error.message}`);
             reject(error);
           }
         );
       });
     } catch (e) {
-      console.error('Error setting up model loader:', e);
+      addLog(`❌ Error setting up loader: ${e.message}`);
       throw e;
     }
   };
@@ -260,8 +266,8 @@ export default function ARBPage() {
   const nextScene = async () => {
     if (currentScene < scenes.length - 1) {
       const newScene = currentScene + 1;
-      setCurrentScene(newScene);
       addLog(`➡️ Switching to scene ${newScene + 1}: ${scenes[newScene].name}`);
+      setCurrentScene(newScene);
 
       // Load new model if in AR
       if (sessionActive && rendererRef.current) {
@@ -269,27 +275,34 @@ export default function ARBPage() {
           addLog(`📦 Loading ${scenes[newScene].name}...`);
           const model = await loadModelForScene(newScene);
           rendererRef.current.loadedModel = model;
+          addLog(`✅ Model loaded into memory`);
 
           // If there's already a placed model, automatically replace it
           if (placedModelRef.current) {
-            addLog('🔄 Auto-replacing model...');
+            addLog(`🔄 Auto-replacing model... (old pos: ${placedModelRef.current.position.x.toFixed(2)}, ${placedModelRef.current.position.y.toFixed(2)}, ${placedModelRef.current.position.z.toFixed(2)})`);
+
+            // Save old position
+            const oldPosition = placedModelRef.current.position.clone();
 
             // Remove old model
             rendererRef.current.scene.remove(placedModelRef.current);
+            addLog(`🗑️ Old model removed from scene`);
 
             // Place new model at same position as old one
             const newPlacedModel = model.clone();
-            newPlacedModel.position.copy(placedModelRef.current.position);
+            newPlacedModel.position.copy(oldPosition);
             rendererRef.current.scene.add(newPlacedModel);
             placedModelRef.current = newPlacedModel;
 
-            addLog(`✅ ${scenes[newScene].name} placed`);
+            addLog(`✅ ${scenes[newScene].name} placed at (${oldPosition.x.toFixed(2)}, ${oldPosition.y.toFixed(2)}, ${oldPosition.z.toFixed(2)})`);
           } else {
-            addLog(`✅ Model ready (tap to place)`);
+            addLog(`⚠️ No model placed yet (tap to place)`);
           }
         } catch (e) {
           addLog(`❌ Failed to load: ${e.message}`);
         }
+      } else {
+        addLog(`⚠️ Not in AR session, skipping model load`);
       }
 
       // Speak new scene script
@@ -297,6 +310,7 @@ export default function ARBPage() {
     } else {
       addLog('📍 Last scene reached');
       setAutoPlay(false);
+      autoPlayRef.current = false;
     }
   };
 
@@ -412,37 +426,38 @@ export default function ARBPage() {
 
       // Load initial model and speak script
       try {
-        console.log(`📦 Loading initial model: ${scenes[currentScene].name}...`);
+        addLog(`📦 Loading initial model: ${scenes[currentScene].name}...`);
         const model = await loadModelForScene(currentScene);
         rendererRef.current.loadedModel = model;
-        console.log(`✅ ${scenes[currentScene].name} ready! Tap screen to place it`);
+        addLog(`✅ ${scenes[currentScene].name} ready! Tap screen to place it`);
 
         // Speak the initial scene script
         speakText(scenes[currentScene].script, currentScene);
       } catch (e) {
-        console.error('❌ Failed to load initial model:', e);
+        addLog(`❌ Failed to load initial model: ${e.message}`);
       }
 
       // Set up tap-to-place controller
       const controller = rendererRef.current.renderer.xr.getController(0);
       controller.addEventListener('select', () => {
-        console.log('👆 Screen tapped!');
+        addLog('👆 Screen tapped!');
 
         const reticle = reticleRef.current;
         const model = rendererRef.current.loadedModel;
 
         if (!reticle || !reticle.visible) {
-          console.warn('No surface detected. Move your device to find a surface.');
+          addLog('⚠️ No surface detected. Move your device to find a surface.');
           return;
         }
 
         if (!model) {
-          console.warn('Model not loaded yet. Please wait...');
+          addLog('⚠️ Model not loaded yet. Please wait...');
           return;
         }
 
         // Remove previous model if exists
         if (placedModelRef.current) {
+          addLog('🗑️ Removing previous model');
           rendererRef.current.scene.remove(placedModelRef.current);
         }
 
@@ -451,7 +466,7 @@ export default function ARBPage() {
         newModel.position.setFromMatrixPosition(reticle.matrix);
         rendererRef.current.scene.add(newModel);
         placedModelRef.current = newModel;
-        console.log(`✅ ${scenes[currentScene].name} placed! It will auto-rotate`);
+        addLog(`✅ ${scenes[currentScene].name} placed at (${newModel.position.x.toFixed(2)}, ${newModel.position.y.toFixed(2)}, ${newModel.position.z.toFixed(2)})`);
       });
       controllerRef.current = controller;
       rendererRef.current.scene.add(controller);
@@ -632,7 +647,7 @@ export default function ARBPage() {
               </div>
 
               {/* Features Info */}
-              <div className="rounded-3xl p-8 backdrop-blur-sm" style={{backgroundColor: 'rgba(212, 163, 115, 0.15)', border: '1px solid #D4A373'}}>
+              <div className="rounded-3xl p-8 backdrop-blur-sm mb-8" style={{backgroundColor: 'rgba(212, 163, 115, 0.15)', border: '1px solid #D4A373'}}>
                 <h3 className="font-bold text-xl mb-4" style={{color: '#1B1B1E'}}>Fitur AR:</h3>
                 <ul className="space-y-3 mb-4" style={{color: '#473C8B'}}>
                   <li>✅ Deteksi permukaan & penempatan 3D</li>
@@ -651,6 +666,22 @@ export default function ARBPage() {
                     <li>• HTTPS connection</li>
                     <li>• Camera permission</li>
                   </ul>
+                </div>
+              </div>
+
+              {/* Console Logs */}
+              <div className="rounded-3xl p-6" style={{backgroundColor: 'rgba(0, 0, 0, 0.9)', border: '2px solid #4CAF50'}}>
+                <h3 className="font-bold text-lg mb-3" style={{color: '#00ff00'}}>📋 Console Logs:</h3>
+                <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                  {logs.length === 0 ? (
+                    <div style={{ color: '#888', fontSize: '0.9rem' }}>No logs yet...</div>
+                  ) : (
+                    logs.map((log, index) => (
+                      <div key={index} style={{ color: '#00ff00', fontSize: '0.85rem', fontFamily: 'monospace', marginBottom: '0.25rem' }}>
+                        {log}
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
