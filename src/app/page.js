@@ -65,8 +65,9 @@ export default function Home() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col w-full gap-4 pt-2">
-              <button 
-                className="relative w-full px-8 py-4 text-white font-bold rounded-2xl transition-all duration-300 overflow-hidden group text-base"
+              <a 
+                href="/galeri"
+                className="relative w-full px-8 py-4 text-white font-bold rounded-2xl transition-all duration-300 overflow-hidden group text-base block text-center"
                 style={{
                   background: 'linear-gradient(135deg, #473C8B 0%, #6B5FBD 100%)',
                   border: '2px solid rgba(138, 127, 216, 0.4)',
@@ -87,32 +88,7 @@ export default function Home() {
                   animation: 'shimmer 2s infinite'
                 }} />
                 <span className="relative z-10">Mulai Perjalanan</span>
-              </button>
-
-              <button 
-                className="relative w-full px-8 py-4 font-bold rounded-2xl transition-all duration-300 text-base overflow-hidden group"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.7)',
-                  backdropFilter: 'blur(20px)',
-                  color: '#473C8B',
-                  border: '2px solid rgba(212, 163, 115, 0.4)',
-                  boxShadow: '0 0 20px rgba(212, 163, 115, 0.2)',
-                  textShadow: '0 0 10px rgba(212, 163, 115, 0.15)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                  e.currentTarget.style.boxShadow = '0 0 30px rgba(212, 163, 115, 0.35)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)';
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(212, 163, 115, 0.2)';
-                }}
-              >
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{
-                  background: 'radial-gradient(circle at center, rgba(212, 163, 115, 0.15), transparent 70%)'
-                }} />
-                <span className="relative z-10">Pelajari Lebih Lanjut</span>
-              </button>
+              </a>
             </div>
           </div>
         </div>
