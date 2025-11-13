@@ -300,58 +300,63 @@ export default function ARDebug2Page() {
       {/* AR Session Active Overlay with CLEAR VISUAL FEEDBACK */}
       {sessionActive && (
         <div
+          id="ar-overlay"
           style={{
             position: 'fixed',
             top: 0,
             left: 0,
             width: '100%',
             height: '100%',
-            pointerEvents: 'auto',
+            pointerEvents: 'none',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            zIndex: 1
+            zIndex: 9999
           }}
         >
           {/* Top status banner - ALWAYS VISIBLE */}
           <div style={{
-            backgroundColor: surfaceFound ? 'rgba(76, 175, 80, 0.95)' : 'rgba(255, 152, 0, 0.95)',
+            backgroundColor: surfaceFound ? 'rgba(34, 139, 34, 0.98)' : 'rgba(255, 140, 0, 0.98)',
             color: 'white',
-            padding: '1.5rem',
-            margin: '1rem',
-            borderRadius: '16px',
+            padding: '2rem 1.5rem',
+            margin: '1.5rem',
+            borderRadius: '20px',
             textAlign: 'center',
-            fontSize: '1.1rem',
-            fontWeight: '700',
+            fontSize: '1.2rem',
+            fontWeight: '800',
             maxWidth: '90%',
             alignSelf: 'center',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-            transition: 'background-color 0.3s ease'
+            boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
+            border: '4px solid white',
+            transition: 'all 0.3s ease',
+            pointerEvents: 'none'
           }}>
             {surfaceFound ? (
               <>
-                <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>✅</div>
-                <div style={{ fontSize: '1.3rem', fontWeight: '800' }}>Surface Found!</div>
-                <div style={{ fontSize: '1rem', marginTop: '0.5rem', fontWeight: '600' }}>👆 TAP screen to place crocodile</div>
+                <div style={{ fontSize: '4rem', marginBottom: '0.75rem', lineHeight: 1 }}>✅</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '900', textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>SURFACE FOUND!</div>
+                <div style={{ fontSize: '1.1rem', marginTop: '0.75rem', fontWeight: '700', backgroundColor: 'rgba(0,0,0,0.3)', padding: '0.75rem', borderRadius: '12px' }}>👆 TAP SCREEN TO PLACE</div>
               </>
             ) : (
               <>
                 {/* Spinning loader */}
                 <div style={{ 
-                  fontSize: '3rem', 
-                  marginBottom: '0.5rem',
+                  fontSize: '4rem', 
+                  marginBottom: '0.75rem',
                   animation: 'spin 2s linear infinite',
-                  display: 'inline-block'
+                  display: 'inline-block',
+                  lineHeight: 1
                 }}>🔄</div>
-                <div style={{ fontSize: '1.3rem', fontWeight: '800' }}>Scanning Surface...</div>
-                <div style={{ fontSize: '1rem', marginTop: '0.5rem', fontWeight: '600' }}>📱 Move device slowly over floor/table</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: '900', textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>SCANNING...</div>
+                <div style={{ fontSize: '1.1rem', marginTop: '0.75rem', fontWeight: '700' }}>📱 Move device slowly</div>
                 <div style={{ 
                   marginTop: '0.75rem',
-                  fontSize: '0.85rem',
-                  backgroundColor: 'rgba(0,0,0,0.3)',
-                  padding: '0.5rem',
-                  borderRadius: '8px'
-                }}>Point camera at flat surfaces</div>
+                  fontSize: '0.95rem',
+                  backgroundColor: 'rgba(0,0,0,0.4)',
+                  padding: '0.75rem',
+                  borderRadius: '12px',
+                  fontWeight: '600'
+                }}>Point at floor or table</div>
               </>
             )}
           </div>
@@ -363,42 +368,47 @@ export default function ARDebug2Page() {
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              backgroundColor: 'rgba(76, 175, 80, 0.98)',
+              backgroundColor: 'rgba(34, 139, 34, 0.98)',
               color: 'white',
-              padding: '2rem 3rem',
-              borderRadius: '20px',
-              fontSize: '1.5rem',
-              fontWeight: 'bold',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-              zIndex: 10,
-              border: '3px solid white',
-              animation: 'popIn 0.3s ease-out'
+              padding: '2.5rem 4rem',
+              borderRadius: '24px',
+              fontSize: '1.8rem',
+              fontWeight: '900',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.6)',
+              zIndex: 10000,
+              border: '5px solid white',
+              animation: 'popIn 0.3s ease-out',
+              textAlign: 'center',
+              pointerEvents: 'none'
             }}>
-              <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🦎</div>
-              <div>Crocodile Placed!</div>
+              <div style={{ fontSize: '4rem', marginBottom: '0.5rem', lineHeight: 1 }}>🦎</div>
+              <div>PLACED!</div>
             </div>
           )}
 
           {/* Bottom controls with console */}
           <div style={{
-            backgroundColor: 'rgba(248, 245, 242, 0.98)',
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
             padding: '1rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '1rem'
+            gap: '0.75rem',
+            pointerEvents: 'auto',
+            borderTop: '3px solid rgba(255,255,255,0.3)'
           }}>
             {/* Console log viewer */}
             <div style={{
               backgroundColor: '#000',
               borderRadius: '8px',
               padding: '0.75rem',
-              maxHeight: '150px',
+              maxHeight: '120px',
               overflowY: 'auto',
-              fontSize: '0.75rem',
-              fontFamily: 'monospace'
+              fontSize: '0.7rem',
+              fontFamily: 'monospace',
+              border: '2px solid #00ff00'
             }}>
-              {logs.slice(-10).map((log, index) => (
-                <div key={index} style={{ color: '#00ff00', marginBottom: '0.25rem' }}>
+              {logs.slice(-8).map((log, index) => (
+                <div key={index} style={{ color: '#00ff00', marginBottom: '0.25rem', lineHeight: 1.3 }}>
                   {log}
                 </div>
               ))}
@@ -410,16 +420,17 @@ export default function ARDebug2Page() {
               style={{
                 backgroundColor: '#DC3545',
                 color: 'white',
-                padding: '1rem 2rem',
-                borderRadius: '12px',
-                border: 'none',
-                fontWeight: 'bold',
-                fontSize: '1.1rem',
+                padding: '1.25rem 2rem',
+                borderRadius: '16px',
+                border: '3px solid white',
+                fontWeight: '900',
+                fontSize: '1.2rem',
                 cursor: 'pointer',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+                textTransform: 'uppercase'
               }}
             >
-              🛑 End AR
+              🛑 END AR
             </button>
           </div>
         </div>
