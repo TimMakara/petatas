@@ -104,6 +104,93 @@ export default function ARDebug2Page() {
     window.speechSynthesis.speak(utterance);
   };
 
+  // Load model for specific scene
+  const loadModelForScene = async (sceneIndex) => {
+    try {
+      const scene = scenes[sceneIndex];
+      addLog(`🔧 Loading ${scene.name} from ${scene.model}...`);
+
+      const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
+      const loader = new GLTFLoader();
+      const modelUrl = window.location.origin + scene.model;
+      addLog(`📡 Model URL: ${modelUrl}`);
+
+      return new Promise((resolve, reject) => {
+        loader.load(
+          modelUrl,
+          (gltf) => {
+            const model = gltf.scene;
+            model.scale.set(scene.scale, scene.scale, scene.scale);
+            addLog(`✅ ${scene.name} loaded successfully!`);
+            resolve(model);
+          },
+          (progress) => {
+            if (progress.lengthComputable) {
+              const percent = (progress.loaded / progress.total * 100).toFixed(0);
+              addLog(`⏳ Loading ${scene.name}: ${percent}%`);
+            }
+          },
+          (error) => {
+            addLog(`❌ Error loading ${scene.name}: ${error.message}`);
+            reject(error);
+          }
+        );
+      });
+    } catch (e) {
+      addLog(`❌ Error setting up loader: ${e.message}`);
+      throw e;
+    }
+  };
+
+  // Switch to next scene
+  const nextScene = async () => {
+    if (currentSceneRef.current < scenes.length - 1) {
+      const newScene = currentSceneRef.current + 1;
+      addLog(`➡️ Switching to scene ${newScene + 1}: ${scenes[newScene].name}`);
+      setCurrentScene(newScene);
+      currentSceneRef.current = newScene;
+
+      // Load new model
+      if (sessionActive && rendererRef.current) {
+        try {
+          addLog(`📦 Loading ${scenes[newScene].name}...`);
+          const model = await loadModelForScene(newScene);
+          rendererRef.current.loadedModel = model;
+          addLog(`✅ Model loaded into memory`);
+
+          // If there's already a placed model, automatically replace it
+          if (placedModelRef.current) {
+            addLog(`🔄 Auto-replacing model...`);
+
+            // Save old position
+            const oldPosition = placedModelRef.current.position.clone();
+
+            // Remove old model
+            rendererRef.current.scene.remove(placedModelRef.current);
+            addLog(`🗑️ Old model removed from scene`);
+
+            // Place new model at same position
+            const newPlacedModel = model.clone();
+            newPlacedModel.position.copy(oldPosition);
+            rendererRef.current.scene.add(newPlacedModel);
+            placedModelRef.current = newPlacedModel;
+
+            addLog(`✅ ${scenes[newScene].name} placed at (${oldPosition.x.toFixed(2)}, ${oldPosition.y.toFixed(2)}, ${oldPosition.z.toFixed(2)})`);
+            
+            // Speak new scene script
+            speakText(scenes[newScene].script, newScene);
+          } else {
+            addLog(`⚠️ No model placed yet (tap to place)`);
+          }
+        } catch (e) {
+          addLog(`❌ Failed to load: ${e.message}`);
+        }
+      }
+    } else {
+      addLog('📍 Last scene reached');
+    }
+  };
+
   // Check WebXR support
   useEffect(() => {
     const checkSupport = async () => {
