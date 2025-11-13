@@ -22,35 +22,12 @@ export default function ARBPage() {
   const autoPlayTimerRef = useRef(null);
   const autoPlayRef = useRef(false); // Ref to track autoPlay state for callbacks
 
-  const addLog = (message, type = 'info') => {
-    const timestamp = new Date().toLocaleTimeString('en-US', {
-      hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      fractionalSecondDigits: 1
-    });
-    const logEntry = {
-      timestamp,
-      message,
-      type // 'info', 'success', 'warning', 'error', 'debug'
-    };
-    setLogs(prev => [...prev.slice(-50), logEntry]); // Keep last 50 logs
-    console.log(`[${timestamp}] ${message}`);
+  const addLog = (message) => {
+    const timestamp = new Date().toLocaleTimeString();
+    const logMessage = `[${timestamp}] ${message}`;
+    setLogs(prev => [...prev.slice(-20), logMessage]); // Keep last 20 logs
+    console.log(message);
   };
-
-  const clearLogs = () => {
-    setLogs([]);
-    addLog('🗑️ Logs cleared');
-  };
-
-  // Auto-scroll to latest log
-  useEffect(() => {
-    const logContainer = document.getElementById('log-container');
-    if (logContainer && logs.length > 0) {
-      logContainer.scrollTop = logContainer.scrollHeight;
-    }
-  }, [logs]);
 
   // Scenes with models and scripts
   const scenes = [
@@ -71,11 +48,11 @@ export default function ARBPage() {
   // Text-to-speech function with ref to get latest state
   const speakText = (text, sceneIndex) => {
     if (typeof window === 'undefined' || !window.speechSynthesis) {
-      addLog('⚠️ Speech synthesis not supported', 'warning');
+      addLog('⚠️ Speech synthesis not supported');
       return;
     }
 
-    addLog(`🔊 Starting speech for scene ${sceneIndex + 1}: "${text.substring(0, 50)}..."`, 'info');
+    addLog(`🔊 Starting speech for scene ${sceneIndex + 1}`);
 
     // Cancel any ongoing speech
     window.speechSynthesis.cancel();
@@ -87,17 +64,17 @@ export default function ARBPage() {
 
     utterance.onstart = () => {
       setIsSpeaking(true);
-      addLog(`✅ Speech started for scene ${sceneIndex + 1}`, 'success');
+      addLog(`✅ Speech started for scene ${sceneIndex + 1}`);
     };
 
     utterance.onend = () => {
       setIsSpeaking(false);
-      addLog(`🔇 Speech ended for scene ${sceneIndex + 1}`, 'info');
-      addLog(`🎮 AutoPlay status: ${autoPlayRef.current ? '✅ ENABLED' : '❌ DISABLED'}`, 'debug');
+      addLog(`🔇 Speech ended for scene ${sceneIndex + 1}`);
+      addLog(`AutoPlay: ${autoPlayRef.current ? 'ENABLED' : 'DISABLED'}`);
 
       // Check if auto-play is still enabled using ref
       if (autoPlayRef.current && sceneIndex < scenes.length - 1) {
-        addLog('⏱️ Scheduling next scene in 5 seconds...', 'warning');
+        addLog('✅ Scheduling next scene in 5 seconds...');
 
         // Clear any existing timer
         if (autoPlayTimerRef.current) {
@@ -106,22 +83,22 @@ export default function ARBPage() {
 
         // Schedule next scene
         autoPlayTimerRef.current = setTimeout(() => {
-          addLog('⏰ Timer fired! Auto-switching to next scene...', 'success');
+          addLog('⏰ Timer fired! Switching to next scene...');
           nextScene();
         }, 5000);
       } else if (sceneIndex >= scenes.length - 1) {
         // Last scene, stop auto-play
-        addLog('📍 Last scene reached, stopping auto-play', 'warning');
+        addLog('📍 Last scene, stopping auto-play');
         setAutoPlay(false);
         autoPlayRef.current = false;
       } else {
-        addLog('⏹️ Auto-play disabled, not scheduling next scene', 'debug');
+        addLog('⏹️ Auto-play disabled, not scheduling');
       }
     };
 
     utterance.onerror = (event) => {
       setIsSpeaking(false);
-      addLog(`❌ Speech error: ${event.error}`, 'error');
+      addLog('❌ Speech error: ' + event.error);
     };
 
     speechSynthesisRef.current = utterance;
@@ -130,13 +107,13 @@ export default function ARBPage() {
 
   // Check WebXR support
   useEffect(() => {
-    addLog('🔍 Checking WebXR support...', 'info');
+    addLog('🔍 Checking WebXR support...');
 
     const checkSupport = async () => {
       setStatusMessage('Checking WebXR support...');
 
       if (!navigator.xr) {
-        addLog('❌ WebXR not available (navigator.xr is undefined)', 'error');
+        addLog('❌ WebXR not available');
         setStatusMessage('WebXR not available');
         setArSupported(false);
         return;
@@ -146,9 +123,9 @@ export default function ARBPage() {
         const supported = await navigator.xr.isSessionSupported('immersive-ar');
         setArSupported(supported);
         setStatusMessage(supported ? 'WebXR AR supported!' : 'WebXR AR not supported');
-        addLog(supported ? '✅ WebXR AR is supported on this device!' : '❌ WebXR AR not supported on this device', supported ? 'success' : 'error');
+        addLog(supported ? '✅ WebXR AR supported!' : '❌ WebXR AR not supported');
       } catch (e) {
-        addLog(`❌ Error checking WebXR support: ${e.message}`, 'error');
+        addLog('❌ Error checking support: ' + e.message);
         setArSupported(false);
         setStatusMessage('Error checking WebXR support');
       }
@@ -251,12 +228,12 @@ export default function ARBPage() {
   const loadModelForScene = async (sceneIndex) => {
     try {
       const scene = scenes[sceneIndex];
-      addLog(`🔧 [LOAD] Loading ${scene.name} from ${scene.model}...`, 'info');
+      addLog(`🔧 Loading ${scene.name} from ${scene.model}...`);
 
       const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
       const loader = new GLTFLoader();
       const modelUrl = window.location.origin + scene.model;
-      addLog(`📡 [LOAD] Model URL: ${modelUrl}`, 'debug');
+      addLog(`📡 Model URL: ${modelUrl}`);
 
       return new Promise((resolve, reject) => {
         loader.load(
@@ -264,23 +241,23 @@ export default function ARBPage() {
           (gltf) => {
             const model = gltf.scene;
             model.scale.set(scene.scale, scene.scale, scene.scale);
-            addLog(`✅ [LOAD] ${scene.name} GLB loaded successfully! (Scale: ${scene.scale})`, 'success');
+            addLog(`✅ ${scene.name} GLB loaded successfully!`);
             resolve(model);
           },
           (progress) => {
             if (progress.lengthComputable) {
               const percent = (progress.loaded / progress.total * 100).toFixed(0);
-              addLog(`⏳ [LOAD] Loading ${scene.name}: ${percent}%`, 'debug');
+              addLog(`⏳ Loading ${scene.name}: ${percent}%`);
             }
           },
           (error) => {
-            addLog(`❌ [LOAD] Error loading ${scene.name}: ${error.message}`, 'error');
+            addLog(`❌ Error loading ${scene.name}: ${error.message}`);
             reject(error);
           }
         );
       });
     } catch (e) {
-      addLog(`❌ [LOAD] Error setting up loader: ${e.message}`, 'error');
+      addLog(`❌ Error setting up loader: ${e.message}`);
       throw e;
     }
   };
@@ -289,28 +266,27 @@ export default function ARBPage() {
   const nextScene = async () => {
     if (currentScene < scenes.length - 1) {
       const newScene = currentScene + 1;
-      addLog(`➡️ [SCENE] Switching to scene ${newScene + 1}: ${scenes[newScene].name}`, 'warning');
+      addLog(`➡️ Switching to scene ${newScene + 1}: ${scenes[newScene].name}`);
       setCurrentScene(newScene);
 
       // Load new model if in AR
       if (sessionActive && rendererRef.current) {
         try {
-          addLog(`📦 [SCENE] Preparing to load ${scenes[newScene].name}...`, 'info');
+          addLog(`📦 Loading ${scenes[newScene].name}...`);
           const model = await loadModelForScene(newScene);
           rendererRef.current.loadedModel = model;
-          addLog(`✅ [SCENE] ${scenes[newScene].name} loaded into memory`, 'success');
+          addLog(`✅ Model loaded into memory`);
 
           // If there's already a placed model, automatically replace it
           if (placedModelRef.current) {
-            const oldPos = placedModelRef.current.position;
-            addLog(`🔄 [REPLACE] Auto-replacing model at position (${oldPos.x.toFixed(2)}, ${oldPos.y.toFixed(2)}, ${oldPos.z.toFixed(2)})`, 'warning');
+            addLog(`🔄 Auto-replacing model... (old pos: ${placedModelRef.current.position.x.toFixed(2)}, ${placedModelRef.current.position.y.toFixed(2)}, ${placedModelRef.current.position.z.toFixed(2)})`);
 
             // Save old position
             const oldPosition = placedModelRef.current.position.clone();
 
             // Remove old model
             rendererRef.current.scene.remove(placedModelRef.current);
-            addLog(`🗑️ [REPLACE] Old ${scenes[currentScene].name} removed from scene`, 'debug');
+            addLog(`🗑️ Old model removed from scene`);
 
             // Place new model at same position as old one
             const newPlacedModel = model.clone();
@@ -318,21 +294,21 @@ export default function ARBPage() {
             rendererRef.current.scene.add(newPlacedModel);
             placedModelRef.current = newPlacedModel;
 
-            addLog(`✅ [REPLACE] ${scenes[newScene].name} placed successfully at (${oldPosition.x.toFixed(2)}, ${oldPosition.y.toFixed(2)}, ${oldPosition.z.toFixed(2)})`, 'success');
+            addLog(`✅ ${scenes[newScene].name} placed at (${oldPosition.x.toFixed(2)}, ${oldPosition.y.toFixed(2)}, ${oldPosition.z.toFixed(2)})`);
           } else {
-            addLog(`⚠️ [REPLACE] No model placed yet (user needs to tap screen)`, 'warning');
+            addLog(`⚠️ No model placed yet (tap to place)`);
           }
         } catch (e) {
-          addLog(`❌ [SCENE] Failed to load model: ${e.message}`, 'error');
+          addLog(`❌ Failed to load: ${e.message}`);
         }
       } else {
-        addLog(`⚠️ [SCENE] Not in AR session, skipping model load`, 'warning');
+        addLog(`⚠️ Not in AR session, skipping model load`);
       }
 
       // Speak new scene script
       speakText(scenes[newScene].script, newScene);
     } else {
-      addLog('📍 [SCENE] Last scene reached, stopping', 'warning');
+      addLog('📍 Last scene reached');
       setAutoPlay(false);
       autoPlayRef.current = false;
     }
@@ -341,19 +317,19 @@ export default function ARBPage() {
   // Handle auto-play toggle
   const toggleAutoPlay = () => {
     const newAutoPlay = !autoPlay;
-    addLog(`🎮 [AUTO-PLAY] Toggled ${newAutoPlay ? 'ON ✅' : 'OFF ❌'}`, newAutoPlay ? 'success' : 'warning');
+    addLog(`🎮 Auto-play: ${newAutoPlay ? 'ON' : 'OFF'}`);
     setAutoPlay(newAutoPlay);
     autoPlayRef.current = newAutoPlay; // Sync ref
 
     if (!newAutoPlay) {
       // Stop auto-play - clear any pending timer
       if (autoPlayTimerRef.current) {
-        addLog('⏹️ [AUTO-PLAY] Clearing scheduled timer', 'debug');
+        addLog('⏹️ Clearing timer');
         clearTimeout(autoPlayTimerRef.current);
         autoPlayTimerRef.current = null;
       }
     } else {
-      addLog('▶️ [AUTO-PLAY] Auto-play mode activated', 'success');
+      addLog('▶️ Auto-play enabled');
     }
   };
 
@@ -464,24 +440,24 @@ export default function ARBPage() {
       // Set up tap-to-place controller
       const controller = rendererRef.current.renderer.xr.getController(0);
       controller.addEventListener('select', () => {
-        addLog('👆 [TAP] Screen tapped!', 'info');
+        addLog('👆 Screen tapped!');
 
         const reticle = reticleRef.current;
         const model = rendererRef.current.loadedModel;
 
         if (!reticle || !reticle.visible) {
-          addLog('⚠️ [TAP] No surface detected. Move device to find a surface.', 'warning');
+          addLog('⚠️ No surface detected. Move your device to find a surface.');
           return;
         }
 
         if (!model) {
-          addLog('⚠️ [TAP] Model not loaded yet. Please wait...', 'warning');
+          addLog('⚠️ Model not loaded yet. Please wait...');
           return;
         }
 
         // Remove previous model if exists
         if (placedModelRef.current) {
-          addLog(`🗑️ [TAP] Removing previous ${scenes[currentScene].name}`, 'debug');
+          addLog('🗑️ Removing previous model');
           rendererRef.current.scene.remove(placedModelRef.current);
         }
 
@@ -490,7 +466,7 @@ export default function ARBPage() {
         newModel.position.setFromMatrixPosition(reticle.matrix);
         rendererRef.current.scene.add(newModel);
         placedModelRef.current = newModel;
-        addLog(`✅ [TAP] ${scenes[currentScene].name} placed at (${newModel.position.x.toFixed(2)}, ${newModel.position.y.toFixed(2)}, ${newModel.position.z.toFixed(2)})`, 'success');
+        addLog(`✅ ${scenes[currentScene].name} placed at (${newModel.position.x.toFixed(2)}, ${newModel.position.y.toFixed(2)}, ${newModel.position.z.toFixed(2)})`);
       });
       controllerRef.current = controller;
       rendererRef.current.scene.add(controller);
@@ -693,107 +669,19 @@ export default function ARBPage() {
                 </div>
               </div>
 
-              {/* Console Logs - Enhanced */}
-              <div className="rounded-3xl overflow-hidden" style={{backgroundColor: 'rgba(0, 0, 0, 0.95)', border: '2px solid #4CAF50', boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)'}}>
-                {/* Header */}
-                <div style={{
-                  backgroundColor: '#1a1a1a',
-                  padding: '1rem',
-                  borderBottom: '1px solid #4CAF50',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
-                  <h3 className="font-bold text-lg" style={{color: '#00ff00', margin: 0}}>
-                    📋 Console Logs <span style={{fontSize: '0.8rem', color: '#888'}}>({logs.length})</span>
-                  </h3>
-                  <button
-                    onClick={clearLogs}
-                    style={{
-                      backgroundColor: '#DC3545',
-                      color: 'white',
-                      border: 'none',
-                      padding: '0.5rem 1rem',
-                      borderRadius: '6px',
-                      fontSize: '0.8rem',
-                      cursor: 'pointer',
-                      fontWeight: 'bold'
-                    }}
-                  >
-                    🗑️ Clear
-                  </button>
-                </div>
-
-                {/* Log container */}
-                <div
-                  id="log-container"
-                  style={{
-                    maxHeight: '400px',
-                    minHeight: '200px',
-                    overflowY: 'auto',
-                    overflowX: 'hidden',
-                    padding: '1rem',
-                    backgroundColor: '#0a0a0a'
-                  }}
-                >
+              {/* Console Logs */}
+              <div className="rounded-3xl p-6" style={{backgroundColor: 'rgba(0, 0, 0, 0.9)', border: '2px solid #4CAF50'}}>
+                <h3 className="font-bold text-lg mb-3" style={{color: '#00ff00'}}>📋 Console Logs:</h3>
+                <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
                   {logs.length === 0 ? (
-                    <div style={{
-                      color: '#666',
-                      fontSize: '0.9rem',
-                      textAlign: 'center',
-                      padding: '2rem',
-                      fontStyle: 'italic'
-                    }}>
-                      Waiting for logs...
-                    </div>
+                    <div style={{ color: '#888', fontSize: '0.9rem' }}>No logs yet...</div>
                   ) : (
-                    logs.map((log, index) => {
-                      const getLogColor = (type) => {
-                        switch(type) {
-                          case 'success': return '#00ff00';
-                          case 'error': return '#ff4444';
-                          case 'warning': return '#ffaa00';
-                          case 'debug': return '#00aaff';
-                          default: return '#aaaaaa';
-                        }
-                      };
-
-                      return (
-                        <div
-                          key={index}
-                          style={{
-                            marginBottom: '0.5rem',
-                            padding: '0.5rem',
-                            backgroundColor: index % 2 === 0 ? '#111' : '#0a0a0a',
-                            borderRadius: '4px',
-                            borderLeft: `3px solid ${getLogColor(log.type)}`,
-                            fontSize: '0.85rem',
-                            fontFamily: 'monospace',
-                            lineHeight: '1.4'
-                          }}
-                        >
-                          <span style={{ color: '#666', marginRight: '0.5rem' }}>
-                            {log.timestamp}
-                          </span>
-                          <span style={{ color: getLogColor(log.type) }}>
-                            {log.message}
-                          </span>
-                        </div>
-                      );
-                    })
+                    logs.map((log, index) => (
+                      <div key={index} style={{ color: '#00ff00', fontSize: '0.85rem', fontFamily: 'monospace', marginBottom: '0.25rem' }}>
+                        {log}
+                      </div>
+                    ))
                   )}
-                </div>
-
-                {/* Footer */}
-                <div style={{
-                  backgroundColor: '#1a1a1a',
-                  padding: '0.5rem 1rem',
-                  borderTop: '1px solid #333',
-                  fontSize: '0.75rem',
-                  color: '#666',
-                  textAlign: 'center'
-                }}>
-                  💡 Tip: Scroll up to see older logs
                 </div>
               </div>
             </div>
