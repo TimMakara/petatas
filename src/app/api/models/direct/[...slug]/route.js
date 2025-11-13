@@ -2,27 +2,23 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-export async function GET(request) {
+export async function GET(request, { params }) {
   try {
-    // Get the requested model file from the query parameters
-    const { searchParams } = new URL(request.url);
-    const modelFile = searchParams.get('file');
-
-    if (!modelFile) {
-      return NextResponse.json(
-        { error: 'No model file specified' },
-        { status: 400 }
-      );
-    }
-
+    // Get the file path from the slug
+    const filePath = params.slug.join('/');
+    console.log('Direct route accessed with filePath:', filePath);
+    console.log('Params:', params);
+    
     // Security check to prevent directory traversal
-    const normalizedPath = path.normalize(modelFile).replace(/^(\.\.[\/\\])+/, '');
+    const normalizedPath = path.normalize(filePath).replace(/^(\.\.[\/\\])+/, '');
     const modelPath = path.join(process.cwd(), 'public/models', normalizedPath);
+    console.log('Model path:', modelPath);
 
     // Check if the file exists
     if (!fs.existsSync(modelPath)) {
+      console.log('File not found at path:', modelPath);
       return NextResponse.json(
-        { error: 'Model file not found' },
+        { error: 'Model file not found', path: modelPath },
         { status: 404 }
       );
     }
@@ -30,6 +26,7 @@ export async function GET(request) {
     // Read the file
     const fileBuffer = fs.readFileSync(modelPath);
     const fileExtension = path.extname(modelPath).toLowerCase();
+    const fileName = path.basename(modelPath);
 
     // Set appropriate content type based on file extension
     let contentType = 'application/octet-stream';
@@ -55,9 +52,6 @@ export async function GET(request) {
         contentType = 'application/octet-stream';
     }
 
-    // Get just the filename without path for security
-    const fileName = path.basename(modelFile);
-    
     // Return the file with appropriate headers
     return new NextResponse(fileBuffer, {
       status: 200,
@@ -74,8 +68,13 @@ export async function GET(request) {
     });
   } catch (error) {
     console.error('Error serving model:', error);
+    console.error('Error stack:', error.stack);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      {
+        error: 'Internal server error',
+        details: error.message,
+        stack: error.stack
+      },
       { status: 500 }
     );
   }

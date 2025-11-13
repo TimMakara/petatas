@@ -2,34 +2,39 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-export async function GET(request) {
+export async function GET(request, context) {
   try {
-    // Get the requested model file from the query parameters
-    const { searchParams } = new URL(request.url);
-    const modelFile = searchParams.get('file');
-
-    if (!modelFile) {
+    // Get filename from params - handle different Next.js versions
+    const params = context.params || {};
+    const filename = params.filename ? params.filename.join('/') : '';
+    console.log('File route accessed with filename:', filename);
+    console.log('Context:', context);
+    
+    if (!filename) {
       return NextResponse.json(
-        { error: 'No model file specified' },
+        { error: 'No filename provided' },
         { status: 400 }
       );
     }
-
+    
     // Security check to prevent directory traversal
-    const normalizedPath = path.normalize(modelFile).replace(/^(\.\.[\/\\])+/, '');
+    const normalizedPath = path.normalize(filename).replace(/^(\.\.[\/\\])+/, '');
     const modelPath = path.join(process.cwd(), 'public/models', normalizedPath);
+    console.log('Model path:', modelPath);
 
-    // Check if the file exists
+    // Check if file exists
     if (!fs.existsSync(modelPath)) {
+      console.log('File not found at path:', modelPath);
       return NextResponse.json(
-        { error: 'Model file not found' },
+        { error: 'Model file not found', path: modelPath },
         { status: 404 }
       );
     }
 
-    // Read the file
+    // Read file
     const fileBuffer = fs.readFileSync(modelPath);
     const fileExtension = path.extname(modelPath).toLowerCase();
+    const fileName = path.basename(modelPath);
 
     // Set appropriate content type based on file extension
     let contentType = 'application/octet-stream';
@@ -55,10 +60,7 @@ export async function GET(request) {
         contentType = 'application/octet-stream';
     }
 
-    // Get just the filename without path for security
-    const fileName = path.basename(modelFile);
-    
-    // Return the file with appropriate headers
+    // Return file with appropriate headers
     return new NextResponse(fileBuffer, {
       status: 200,
       headers: {
@@ -74,8 +76,13 @@ export async function GET(request) {
     });
   } catch (error) {
     console.error('Error serving model:', error);
+    console.error('Error stack:', error.stack);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Internal server error',
+        details: error.message,
+        stack: error.stack
+      },
       { status: 500 }
     );
   }
