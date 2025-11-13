@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Home, Camera, Box, Info } from 'lucide-react';
+import { Home, Camera, Image, BookOpen, User } from 'lucide-react';
 
 export default function BottomNav() {
   const pathname = usePathname();
@@ -21,8 +21,14 @@ export default function BottomNav() {
     {
       href: '/',
       icon: Home,
-      label: 'Home',
+      label: 'Beranda',
       active: pathname === '/'
+    },
+    {
+      href: '/galeri',
+      icon: Image,
+      label: 'Galeri',
+      active: pathname === '/galeri'
     },
     {
       href: '/ar',
@@ -31,16 +37,16 @@ export default function BottomNav() {
       active: pathname === '/ar'
     },
     {
-      href: '/model-viewer',
-      icon: Box,
-      label: '3D Model',
-      active: pathname === '/model-viewer'
+      href: '/storybook',
+      icon: BookOpen,
+      label: 'Buku Cerita',
+      active: pathname === '/storybook'
     },
     {
-      href: '#about',
-      icon: Info,
-      label: 'About',
-      active: false
+      href: '/pusakaku',
+      icon: User,
+      label: 'PusakaKu',
+      active: pathname === '/pusakaku'
     }
   ];
 
