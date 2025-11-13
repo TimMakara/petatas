@@ -68,6 +68,21 @@ export const arExperiences = [
 // Buku Cerita data - Story books
 export const bukuCeritaData = [
   {
+    id: 'pacu-jalur',
+    user: {
+      username: 'budaya_riau',
+      avatar: 'https://i.pravatar.cc/150?img=1'
+    },
+    thumbnail: '/images/story-dummy/pacu-jalur.png',
+    title: 'Kisah Pacu Jalur',
+    shortDescription: 'Tradisi balap perahu panjang khas Kuantan Singingi yang menghidupkan semangat kebersamaan di sungai Batang Kuantan',
+    likes: 1567,
+    storybookUrl: '/storybook/pacu-jalur',
+    creator: 'budaya_riau',
+    creatorAvatar: 'https://i.pravatar.cc/150?img=1',
+    isLiked: true
+  },
+  {
     id: 'malin-kundang',
     user: {
       username: 'cerita_rakyat',
@@ -96,21 +111,6 @@ export const bukuCeritaData = [
     creator: 'dongeng_nusantara',
     creatorAvatar: 'https://i.pravatar.cc/150?img=12',
     isLiked: false
-  },
-  {
-    id: 'bawang-merah-bawang-putih',
-    user: {
-      username: 'cerita_rakyat',
-      avatar: 'https://i.pravatar.cc/150?img=11'
-    },
-    thumbnail: '/images/story-dummy/bawang-merah-bawang-putih.png',
-    title: 'Bawang Merah & Bawang Putih',
-    shortDescription: 'Kisah dua saudara dengan sifat berbeda dan balasan yang setimpal dari kebaikan',
-    likes: 876,
-    storybookUrl: '/storybook/bawang-merah-bawang-putih',
-    creator: 'cerita_rakyat',
-    creatorAvatar: 'https://i.pravatar.cc/150?img=11',
-    isLiked: true
   },
   {
     id: 'roro-jonggrang',
