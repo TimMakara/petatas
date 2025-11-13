@@ -9,6 +9,7 @@ export default function ARBPage() {
   const [currentScene, setCurrentScene] = useState(0);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);
+  const [logs, setLogs] = useState([]);
 
   const canvasRef = useRef(null);
   const rendererRef = useRef(null);
@@ -20,6 +21,13 @@ export default function ARBPage() {
   const speechSynthesisRef = useRef(null);
   const autoPlayTimerRef = useRef(null);
   const autoPlayRef = useRef(false); // Ref to track autoPlay state for callbacks
+
+  const addLog = (message) => {
+    const timestamp = new Date().toLocaleTimeString();
+    const logMessage = `[${timestamp}] ${message}`;
+    setLogs(prev => [...prev.slice(-20), logMessage]); // Keep last 20 logs
+    console.log(message);
+  };
 
   // Scenes with models and scripts
   const scenes = [
@@ -40,11 +48,11 @@ export default function ARBPage() {
   // Text-to-speech function with ref to get latest state
   const speakText = (text, sceneIndex) => {
     if (typeof window === 'undefined' || !window.speechSynthesis) {
-      console.warn('Speech synthesis not supported');
+      addLog('⚠️ Speech synthesis not supported');
       return;
     }
 
-    console.log(`🔊 Starting speech for scene ${sceneIndex + 1}: "${text.substring(0, 30)}..."`);
+    addLog(`🔊 Starting speech for scene ${sceneIndex + 1}`);
 
     // Cancel any ongoing speech
     window.speechSynthesis.cancel();
@@ -56,19 +64,17 @@ export default function ARBPage() {
 
     utterance.onstart = () => {
       setIsSpeaking(true);
-      console.log(`✅ Speech started for scene ${sceneIndex + 1}`);
+      addLog(`✅ Speech started for scene ${sceneIndex + 1}`);
     };
 
     utterance.onend = () => {
       setIsSpeaking(false);
-      console.log(`🔇 Speech ended for scene ${sceneIndex + 1}`);
-      console.log(`AutoPlay is currently: ${autoPlayRef.current ? 'ENABLED' : 'DISABLED'}`);
-      console.log(`Current scene index: ${sceneIndex}`);
-      console.log(`Total scenes: ${scenes.length}`);
+      addLog(`🔇 Speech ended for scene ${sceneIndex + 1}`);
+      addLog(`AutoPlay: ${autoPlayRef.current ? 'ENABLED' : 'DISABLED'}`);
 
       // Check if auto-play is still enabled using ref
       if (autoPlayRef.current && sceneIndex < scenes.length - 1) {
-        console.log('✅ Auto-play is enabled, scheduling next scene in 5 seconds...');
+        addLog('✅ Scheduling next scene in 5 seconds...');
 
         // Clear any existing timer
         if (autoPlayTimerRef.current) {
@@ -77,23 +83,22 @@ export default function ARBPage() {
 
         // Schedule next scene
         autoPlayTimerRef.current = setTimeout(() => {
-          console.log('⏰ 5 seconds timer fired!');
-          console.log(`Attempting to move from scene ${sceneIndex + 1} to scene ${sceneIndex + 2}`);
+          addLog('⏰ Timer fired! Switching to next scene...');
           nextScene();
         }, 5000);
       } else if (sceneIndex >= scenes.length - 1) {
         // Last scene, stop auto-play
-        console.log('📍 Last scene reached, stopping auto-play');
+        addLog('📍 Last scene, stopping auto-play');
         setAutoPlay(false);
         autoPlayRef.current = false;
       } else {
-        console.log('⏹️ Auto-play is disabled, not scheduling next scene');
+        addLog('⏹️ Auto-play disabled, not scheduling');
       }
     };
 
     utterance.onerror = (event) => {
       setIsSpeaking(false);
-      console.error('❌ Speech error:', event);
+      addLog('❌ Speech error: ' + event.error);
     };
 
     speechSynthesisRef.current = utterance;
@@ -252,19 +257,18 @@ export default function ARBPage() {
     if (currentScene < scenes.length - 1) {
       const newScene = currentScene + 1;
       setCurrentScene(newScene);
-      console.log(`➡️ Switching to scene ${newScene + 1}: ${scenes[newScene].name}`);
+      addLog(`➡️ Switching to scene ${newScene + 1}: ${scenes[newScene].name}`);
 
       // Load new model if in AR
       if (sessionActive && rendererRef.current) {
         try {
-          console.log(`📦 Loading model for ${scenes[newScene].name}...`);
+          addLog(`📦 Loading ${scenes[newScene].name}...`);
           const model = await loadModelForScene(newScene);
           rendererRef.current.loadedModel = model;
-          console.log(`✅ Model loaded`);
 
           // If there's already a placed model, automatically replace it
-          if (placedModelRef.current && reticleRef.current) {
-            console.log('🔄 Auto-replacing placed model...');
+          if (placedModelRef.current) {
+            addLog('🔄 Auto-replacing model...');
 
             // Remove old model
             rendererRef.current.scene.remove(placedModelRef.current);
@@ -275,20 +279,19 @@ export default function ARBPage() {
             rendererRef.current.scene.add(newPlacedModel);
             placedModelRef.current = newPlacedModel;
 
-            console.log(`✅ Model auto-replaced with ${scenes[newScene].name}`);
+            addLog(`✅ ${scenes[newScene].name} placed`);
           } else {
-            console.log(`✅ Model ready to place (tap screen)`);
+            addLog(`✅ Model ready (tap to place)`);
           }
         } catch (e) {
-          console.error(`❌ Failed to load ${scenes[newScene].name}:`, e);
+          addLog(`❌ Failed to load: ${e.message}`);
         }
       }
 
-      // Speak new scene script (this will trigger scheduleAutoPlay via onend callback)
+      // Speak new scene script
       speakText(scenes[newScene].script, newScene);
     } else {
-      // Last scene reached
-      console.log('📍 Last scene reached, stopping auto-play');
+      addLog('📍 Last scene reached');
       setAutoPlay(false);
     }
   };
@@ -296,19 +299,19 @@ export default function ARBPage() {
   // Handle auto-play toggle
   const toggleAutoPlay = () => {
     const newAutoPlay = !autoPlay;
-    console.log(`🎮 Auto-play toggled: ${newAutoPlay ? 'ON' : 'OFF'}`);
+    addLog(`🎮 Auto-play: ${newAutoPlay ? 'ON' : 'OFF'}`);
     setAutoPlay(newAutoPlay);
     autoPlayRef.current = newAutoPlay; // Sync ref
 
     if (!newAutoPlay) {
       // Stop auto-play - clear any pending timer
       if (autoPlayTimerRef.current) {
-        console.log('⏹️ Clearing auto-play timer');
+        addLog('⏹️ Clearing timer');
         clearTimeout(autoPlayTimerRef.current);
         autoPlayTimerRef.current = null;
       }
     } else {
-      console.log('▶️ Auto-play enabled. Will auto-switch after speech ends.');
+      addLog('▶️ Auto-play enabled');
     }
   };
 
@@ -375,7 +378,7 @@ export default function ARBPage() {
     }
 
     try {
-      console.log('Starting AR session...');
+      addLog('🚀 Starting AR session...');
       setStatusMessage('Starting AR session...');
 
       // Request session with hit-test as required feature
@@ -386,7 +389,7 @@ export default function ARBPage() {
 
       const session = await navigator.xr.requestSession('immersive-ar', sessionOptions);
 
-      console.log('✅ AR session created successfully!');
+      addLog('✅ AR session created!');
       xrSessionRef.current = session;
 
       await rendererRef.current.renderer.xr.setSession(session);
@@ -794,6 +797,31 @@ export default function ARBPage() {
                 <p style={{ margin: 0, color: '#FFC857', fontWeight: 'bold' }}>
                   {isSpeaking ? '🔊 Listening to story...' : '⏱️ Next scene in 5 seconds...'}
                 </p>
+              )}
+            </div>
+
+            {/* Debug Console Log */}
+            <div style={{
+              marginTop: '1rem',
+              backgroundColor: '#1B1B1E',
+              borderRadius: '8px',
+              padding: '0.75rem',
+              maxHeight: '200px',
+              overflowY: 'auto',
+              fontSize: '0.7rem',
+              fontFamily: 'monospace'
+            }}>
+              <div style={{ color: '#4CAF50', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                📋 Debug Console:
+              </div>
+              {logs.length === 0 ? (
+                <div style={{ color: '#888', fontSize: '0.65rem' }}>No logs yet...</div>
+              ) : (
+                logs.slice(-10).map((log, index) => (
+                  <div key={index} style={{ color: '#4CAF50', marginBottom: '0.25rem', lineHeight: '1.3' }}>
+                    {log}
+                  </div>
+                ))
               )}
             </div>
           </div>
