@@ -7,6 +7,7 @@ export default function ARDebug2Page() {
   const [sessionActive, setSessionActive] = useState(false);
   const [surfaceFound, setSurfaceFound] = useState(false);
   const [modelPlaced, setModelPlaced] = useState(false);
+  const [logs, setLogs] = useState([]);
 
   const canvasRef = useRef(null);
   const rendererRef = useRef(null);
@@ -15,17 +16,29 @@ export default function ARDebug2Page() {
   const reticleRef = useRef(null);
   const placedModelRef = useRef(null);
 
+  const addLog = (message) => {
+    const timestamp = new Date().toLocaleTimeString();
+    const logMsg = `[${timestamp}] ${message}`;
+    setLogs(prev => [...prev, logMsg]);
+    console.log(logMsg);
+  };
+
   // Check WebXR support
   useEffect(() => {
     const checkSupport = async () => {
+      addLog('🔍 Checking WebXR support...');
       if (!navigator.xr) {
+        addLog('❌ navigator.xr not available');
         setArSupported(false);
         return;
       }
+      addLog('✅ navigator.xr available');
       try {
         const supported = await navigator.xr.isSessionSupported('immersive-ar');
+        addLog(`AR Support: ${supported ? '✅ YES' : '❌ NO'}`);
         setArSupported(supported);
       } catch (e) {
+        addLog(`❌ Error: ${e.message}`);
         setArSupported(false);
       }
     };
@@ -38,6 +51,7 @@ export default function ARDebug2Page() {
 
     const init = async () => {
       try {
+        addLog('⚙️ Initializing Three.js...');
         const THREE = await import('three');
 
         const scene = new THREE.Scene();
@@ -78,10 +92,13 @@ export default function ARDebug2Page() {
         reticle.visible = false;
         scene.add(reticle);
         reticleRef.current = reticle;
+        addLog('✅ Reticle created (green pulsing ring)');
 
         rendererRef.current = { THREE, renderer, scene, camera, reticleMaterial };
+        addLog('✅ Three.js initialized successfully');
 
         let pulseTime = 0;
+        let lastSurfaceState = false;
         renderer.setAnimationLoop((timestamp, frame) => {
           // Handle hit testing in AR mode
           if (frame && xrSessionRef.current) {
@@ -102,10 +119,18 @@ export default function ARDebug2Page() {
                 const scale = 1 + Math.sin(pulseTime) * 0.2;
                 reticle.scale.set(scale, scale, scale);
                 
-                // Update UI state
+                // Update UI state and log change
+                if (!lastSurfaceState) {
+                  addLog('✅ Surface detected!');
+                  lastSurfaceState = true;
+                }
                 setSurfaceFound(true);
               } else {
                 reticle.visible = false;
+                if (lastSurfaceState) {
+                  addLog('⚠️ Surface lost, keep scanning...');
+                  lastSurfaceState = false;
+                }
                 setSurfaceFound(false);
               }
             }
@@ -136,27 +161,36 @@ export default function ARDebug2Page() {
   // Start AR session
   const startAR = async () => {
     if (!rendererRef.current || !arSupported) {
+      addLog('❌ AR not ready or not supported');
       alert('AR not ready or not supported');
       return;
     }
 
     try {
+      addLog('🚀 Starting AR session...');
       const sessionOptions = {
         requiredFeatures: ['hit-test'],
         optionalFeatures: ['dom-overlay'],
       };
+      addLog(`Session options: ${JSON.stringify(sessionOptions)}`);
 
       const session = await navigator.xr.requestSession('immersive-ar', sessionOptions);
+      addLog('✅ AR session created!');
       xrSessionRef.current = session;
 
+      addLog('🎨 Setting session on Three.js renderer...');
       await rendererRef.current.renderer.xr.setSession(session);
+      addLog('✅ Renderer session set');
 
       // Set up hit test source
+      addLog('🎯 Setting up hit-test source...');
       const viewerSpace = await session.requestReferenceSpace('viewer');
       const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
       hitTestSourceRef.current = hitTestSource;
+      addLog('✅ Hit-test ready - start scanning!');
 
       // Load 3D model
+      addLog('🦎 Loading crocodile model...');
       const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
       const loader = new GLTFLoader();
       const modelUrl = window.location.origin + '/models/cartoon_crocodile_croco-roco.glb';
@@ -167,22 +201,36 @@ export default function ARDebug2Page() {
           const model = gltf.scene;
           model.scale.set(0.3, 0.3, 0.3);
           rendererRef.current.loadedModel = model;
+          addLog('✅ Crocodile model loaded!');
         },
         undefined,
-        (error) => console.error('Error loading model:', error)
+        (error) => {
+          addLog(`❌ Model load error: ${error.message}`);
+          console.error('Error loading model:', error);
+        }
       );
 
       // Set up tap-to-place
       const controller = rendererRef.current.renderer.xr.getController(0);
       controller.addEventListener('select', () => {
+        addLog('👆 Screen tapped!');
         const reticle = reticleRef.current;
         const model = rendererRef.current.loadedModel;
         
-        if (!reticle || !reticle.visible || !model) return;
+        if (!reticle || !reticle.visible) {
+          addLog('⚠️ No surface visible, cannot place');
+          return;
+        }
+        
+        if (!model) {
+          addLog('⚠️ Model not loaded yet');
+          return;
+        }
         
         // Remove previous model
         if (placedModelRef.current) {
           rendererRef.current.scene.remove(placedModelRef.current);
+          addLog('🗑️ Removed previous model');
         }
         
         // Clone and place new model
@@ -190,14 +238,21 @@ export default function ARDebug2Page() {
         newModel.position.setFromMatrixPosition(reticle.matrix);
         rendererRef.current.scene.add(newModel);
         placedModelRef.current = newModel;
+        addLog('✅ Crocodile placed!');
         setModelPlaced(true);
+        
+        // Hide confirmation after 2 seconds
+        setTimeout(() => setModelPlaced(false), 2000);
       });
       rendererRef.current.scene.add(controller);
+      addLog('✅ Tap-to-place controller ready');
       
       setSessionActive(true);
+      addLog('🎉 AR Session fully active!');
 
       // Handle session end
       session.addEventListener('end', () => {
+        addLog('🛑 AR session ended');
         setSessionActive(false);
         setSurfaceFound(false);
         setModelPlaced(false);
@@ -215,6 +270,7 @@ export default function ARDebug2Page() {
       });
 
     } catch (error) {
+      addLog(`❌ AR Error: ${error.name} - ${error.message}`);
       console.error('AR Error:', error);
       alert(`AR Error: ${error.message}`);
     }
@@ -302,14 +358,32 @@ export default function ARDebug2Page() {
             </div>
           )}
 
-          {/* Bottom controls */}
+          {/* Bottom controls with console */}
           <div style={{
-            backgroundColor: 'rgba(248, 245, 242, 0.95)',
-            padding: '1.5rem',
+            backgroundColor: 'rgba(248, 245, 242, 0.98)',
+            padding: '1rem',
             display: 'flex',
-            justifyContent: 'center',
+            flexDirection: 'column',
             gap: '1rem'
           }}>
+            {/* Console log viewer */}
+            <div style={{
+              backgroundColor: '#000',
+              borderRadius: '8px',
+              padding: '0.75rem',
+              maxHeight: '150px',
+              overflowY: 'auto',
+              fontSize: '0.75rem',
+              fontFamily: 'monospace'
+            }}>
+              {logs.slice(-10).map((log, index) => (
+                <div key={index} style={{ color: '#00ff00', marginBottom: '0.25rem' }}>
+                  {log}
+                </div>
+              ))}
+            </div>
+            
+            {/* End AR button */}
             <button
               onClick={() => xrSessionRef.current?.end()}
               style={{
@@ -413,7 +487,7 @@ export default function ARDebug2Page() {
               </div>
 
               {/* How to Use */}
-              <div className="rounded-3xl p-8" style={{backgroundColor: 'rgba(71, 60, 139, 0.1)', border: '1px solid #473C8B'}}>
+              <div className="rounded-3xl p-8 mb-8" style={{backgroundColor: 'rgba(71, 60, 139, 0.1)', border: '1px solid #473C8B'}}>
                 <h3 className="font-bold text-xl mb-4" style={{color: '#473C8B'}}>📱 How to Use:</h3>
                 <ol className="space-y-3 list-decimal list-inside" style={{color: '#473C8B'}}>
                   <li><strong>Click "Start AR Experience"</strong> button</li>
@@ -423,6 +497,22 @@ export default function ARDebug2Page() {
                   <li><strong>Tap screen</strong> to place the crocodile</li>
                   <li><strong>Place multiple times</strong> - old model auto-removes</li>
                 </ol>
+              </div>
+
+              {/* Console Logs */}
+              <div className="rounded-3xl p-6" style={{backgroundColor: 'rgba(0, 0, 0, 0.9)', border: '2px solid #4CAF50'}}>
+                <h3 className="font-bold text-lg mb-3" style={{color: '#00ff00'}}>📋 Console Logs:</h3>
+                <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                  {logs.length === 0 ? (
+                    <div style={{ color: '#888', fontSize: '0.9rem' }}>No logs yet...</div>
+                  ) : (
+                    logs.map((log, index) => (
+                      <div key={index} style={{ color: '#00ff00', fontSize: '0.85rem', fontFamily: 'monospace', marginBottom: '0.25rem' }}>
+                        {log}
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
             </div>
           </div>
