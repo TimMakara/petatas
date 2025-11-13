@@ -25,6 +25,7 @@ export default function ARDebug2Page() {
   const autoPlayTimerRef = useRef(null);
   const currentSceneRef = useRef(0);
   const hasSpokenRef = useRef(false);
+  const micIndicatorRef = useRef(null);
 
   // Scenes with models and scripts
   const scenes = [
@@ -255,6 +256,59 @@ export default function ARDebug2Page() {
           return sprite;
         };
 
+        // Function to create microphone icon sprite
+        const createMicIconSprite = () => {
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.width = 256;
+          canvas.height = 256;
+          
+          // Clear background (transparent)
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          
+          const centerX = canvas.width / 2;
+          const centerY = canvas.height / 2;
+          
+          // Draw microphone icon
+          context.strokeStyle = '#FFFFFF';
+          context.fillStyle = '#FFFFFF';
+          context.lineWidth = 12;
+          
+          // Mic body (rounded rectangle)
+          context.beginPath();
+          context.roundRect(centerX - 30, centerY - 60, 60, 80, 30);
+          context.fill();
+          
+          // Mic stand
+          context.beginPath();
+          context.arc(centerX, centerY + 35, 35, 0, Math.PI, false);
+          context.stroke();
+          
+          context.beginPath();
+          context.moveTo(centerX, centerY + 35);
+          context.lineTo(centerX, centerY + 60);
+          context.stroke();
+          
+          // Base
+          context.lineWidth = 14;
+          context.beginPath();
+          context.moveTo(centerX - 30, centerY + 60);
+          context.lineTo(centerX + 30, centerY + 60);
+          context.stroke();
+          
+          const texture = new THREE.CanvasTexture(canvas);
+          const spriteMaterial = new THREE.SpriteMaterial({ 
+            map: texture,
+            transparent: true,
+            opacity: 0.95,
+            depthTest: false,
+            depthWrite: false
+          });
+          const sprite = new THREE.Sprite(spriteMaterial);
+          sprite.scale.set(0.15, 0.15, 1);
+          return sprite;
+        };
+
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
@@ -315,6 +369,13 @@ export default function ARDebug2Page() {
         scene.add(scanningText);
         textSpriteRef.current = { scanning: scanningText, createTextSprite };
         addLog('✅ Text sprites created');
+
+        // Create microphone indicator sprite
+        const micIndicator = createMicIconSprite();
+        micIndicator.visible = false;
+        scene.add(micIndicator);
+        micIndicatorRef.current = micIndicator;
+        addLog('✅ Microphone indicator created');
 
         rendererRef.current = { THREE, renderer, scene, camera, reticleMaterial, statusMaterial, createTextSprite };
         addLog('✅ Three.js initialized successfully');
@@ -433,6 +494,26 @@ export default function ARDebug2Page() {
             if (placedModelRef.current) {
               placedModelRef.current.rotation.y += 0.01;
             }
+
+            // Position and animate microphone indicator
+            const micIndicator = micIndicatorRef.current;
+            if (micIndicator && camera) {
+              const cameraDirection = new THREE.Vector3();
+              camera.getWorldDirection(cameraDirection);
+              const micPosition = camera.position.clone();
+              micPosition.add(cameraDirection.multiplyScalar(0.8)); // 0.8m in front
+              micPosition.y -= 0.35; // Bottom of view
+              micIndicator.position.copy(micPosition);
+              micIndicator.lookAt(camera.position);
+              
+              // Pulsing animation when speaking
+              if (micIndicator.visible) {
+                const pulseScale = 0.15 + Math.sin(timestamp * 0.008) * 0.02;
+                micIndicator.scale.set(pulseScale, pulseScale, 1);
+                // Pulse opacity
+                micIndicator.material.opacity = 0.85 + Math.sin(timestamp * 0.006) * 0.15;
+              }
+            }
           }
 
           renderer.render(scene, camera);
@@ -451,6 +532,18 @@ export default function ARDebug2Page() {
       }
     };
   }, []);
+
+  // Sync mic indicator with isSpeaking state
+  useEffect(() => {
+    if (micIndicatorRef.current) {
+      micIndicatorRef.current.visible = isSpeaking;
+      if (isSpeaking) {
+        addLog('🎤 Mic indicator shown');
+      } else {
+        addLog('🎤 Mic indicator hidden');
+      }
+    }
+  }, [isSpeaking]);
 
   // Start AR session
   const startAR = async () => {
