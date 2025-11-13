@@ -221,35 +221,89 @@ export default function ARPage() {
 
     try {
       console.log('Starting AR session...');
+      console.log('Navigator.xr:', navigator.xr);
       setStatusMessage('Starting AR...');
 
       const overlayElement = document.getElementById('ar-overlay');
 
-      // Try with dom-overlay first, fallback without it
+      // Try different configurations with detailed logging
       let session;
+
+      // Attempt 1: Minimal - just immersive-ar with no features
       try {
+        console.log('Attempt 1: Minimal session (no features)...');
         session = await navigator.xr.requestSession('immersive-ar', {
-          requiredFeatures: ['hit-test'],
-          optionalFeatures: ['dom-overlay'],
-          domOverlay: { root: overlayElement }
+          optionalFeatures: []
         });
-      } catch (e) {
-        console.log('Dom-overlay not supported, trying without it:', e);
-        session = await navigator.xr.requestSession('immersive-ar', {
-          requiredFeatures: ['hit-test']
-        });
+        console.log('✅ Minimal session created successfully');
+      } catch (e1) {
+        console.error('❌ Minimal session failed:', e1.name, e1.message);
+
+        // Attempt 2: With hit-test only
+        try {
+          console.log('Attempt 2: With hit-test...');
+          session = await navigator.xr.requestSession('immersive-ar', {
+            optionalFeatures: ['hit-test']
+          });
+          console.log('✅ Session with hit-test created successfully');
+        } catch (e2) {
+          console.error('❌ Session with hit-test failed:', e2.name, e2.message);
+
+          // Attempt 3: With local-floor reference space
+          try {
+            console.log('Attempt 3: With local-floor...');
+            session = await navigator.xr.requestSession('immersive-ar', {
+              optionalFeatures: ['local-floor']
+            });
+            console.log('✅ Session with local-floor created successfully');
+          } catch (e3) {
+            console.error('❌ Session with local-floor failed:', e3.name, e3.message);
+            throw e1; // Throw the first error
+          }
+        }
       }
 
-      console.log('AR session created');
+      console.log('✅ AR session created:', session);
       xrSessionRef.current = session;
 
       await rendererRef.current.xr.setSession(session);
       setIsInAR(true);
       setStatusMessage('AR Active');
 
-      // Set up hit test
-      const referenceSpace = await session.requestReferenceSpace('viewer');
-      hitTestSourceRef.current = await session.requestHitTestSource({ space: referenceSpace });
+      // Set up hit test if supported - try different reference spaces
+      try {
+        let referenceSpace;
+
+        // Try local-floor first (most common for AR)
+        try {
+          console.log('Trying local-floor reference space...');
+          referenceSpace = await session.requestReferenceSpace('local-floor');
+          console.log('✅ local-floor reference space created');
+        } catch (e1) {
+          console.warn('❌ local-floor failed:', e1.message);
+
+          // Fallback to local
+          try {
+            console.log('Trying local reference space...');
+            referenceSpace = await session.requestReferenceSpace('local');
+            console.log('✅ local reference space created');
+          } catch (e2) {
+            console.warn('❌ local failed:', e2.message);
+
+            // Last resort: viewer
+            console.log('Trying viewer reference space...');
+            referenceSpace = await session.requestReferenceSpace('viewer');
+            console.log('✅ viewer reference space created');
+          }
+        }
+
+        // Now try to create hit test source
+        hitTestSourceRef.current = await session.requestHitTestSource({ space: referenceSpace });
+        console.log('✅ Hit-test source created');
+      } catch (hitTestError) {
+        console.warn('⚠️ Hit-test not available:', hitTestError.name, hitTestError.message);
+        console.log('AR will work but without surface detection reticle');
+      }
 
       // Load initial model
       await loadModel(currentScene);
@@ -270,12 +324,21 @@ export default function ARPage() {
       });
 
     } catch (error) {
-      console.error('AR Error:', error);
+      console.error('=== AR ERROR DETAILS ===');
+      console.error('Error name:', error.name);
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+      console.error('Full error object:', error);
 
-      let errorMsg = 'Error: ' + error.message;
+      let errorMsg = '❌ Error: ' + error.name + '\n\n' + error.message;
 
       if (error.name === 'NotSupportedError') {
-        errorMsg = '❌ WebXR tidak didukung.\n\nCoba:\n1. Update Chrome ke versi terbaru\n2. Pastikan device support ARCore\n3. Restart browser';
+        errorMsg += '\n\nTroubleshooting:\n';
+        errorMsg += '1. Open chrome://flags\n';
+        errorMsg += '2. Enable "WebXR Incubations"\n';
+        errorMsg += '3. Pastikan ARCore terinstall\n';
+        errorMsg += '4. Restart Chrome\n\n';
+        errorMsg += 'Cek console log untuk detail.';
       } else if (error.name === 'NotAllowedError') {
         errorMsg = '❌ Permission ditolak.\n\nAllow camera permission dan coba lagi.';
       } else if (error.name === 'SecurityError') {
@@ -505,16 +568,28 @@ export default function ARPage() {
                     <li>✅ Scene switching in AR</li>
                     <li>✅ Auto-play mode</li>
                   </ul>
-                  <div className="p-4 rounded-lg" style={{backgroundColor: 'rgba(71, 60, 139, 0.1)'}}>
+                  <div className="p-4 rounded-lg mb-4" style={{backgroundColor: 'rgba(71, 60, 139, 0.1)'}}>
                     <p className="text-sm font-semibold mb-2" style={{color: '#473C8B'}}>
-                      📱 Tested on Samsung A52s:
+                      📱 Requirements:
                     </p>
                     <ul className="text-sm space-y-1" style={{color: '#473C8B'}}>
                       <li>• Chrome 79+ or Edge browser</li>
                       <li>• HTTPS connection required</li>
                       <li>• Allow camera permission</li>
-                      <li>• ARCore enabled (built-in)</li>
+                      <li>• ARCore installed (Android)</li>
                     </ul>
+                  </div>
+                  <div className="p-4 rounded-lg" style={{backgroundColor: 'rgba(255, 152, 0, 0.1)', borderLeft: '3px solid #FF9800'}}>
+                    <p className="text-sm font-semibold mb-2" style={{color: '#FF9800'}}>
+                      🔧 Jika masih error:
+                    </p>
+                    <ol className="text-sm space-y-1" style={{color: '#473C8B'}}>
+                      <li>1. Buka chrome://flags di Chrome</li>
+                      <li>2. Cari "WebXR Incubations"</li>
+                      <li>3. Set ke "Enabled"</li>
+                      <li>4. Restart Chrome</li>
+                      <li>5. Cek Console Log (chrome://inspect)</li>
+                    </ol>
                   </div>
                 </div>
               </div>
