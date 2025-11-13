@@ -31,17 +31,41 @@ export default function ARBPage() {
 
   // Scenes with models and scripts
   const scenes = [
+    // 1. Apa itu Pacu Jalur & Festival
     {
-      model: '/models/cartoon_crocodile_croco-roco.glb',
-      script: 'In ancient Indonesian waters, crocodiles were revered as sacred creatures, symbolizing strength and protection.',
-      scale: 0.3,
-      name: 'Sacred Crocodile'
+      model: '/models/boat.glb',
+      script: 'Pacu Jalur adalah tradisi balap perahu panjang khas Kuantan Singingi, Riau. Awalnya sebagai ajang transportasi dan pengangkutan hasil bumi, kini Pacu Jalur menjadi festival budaya, hiburan rakyat, dan ajang adu cepat yang meriah.',
+      scale: 0.5
     },
+    // 2. Sungai Batang Kuantan sebagai jalur transportasi
+    {
+      model: '/models/river.glb',
+      script: 'Pada masa lalu, sungai Batang Kuantan menjadi jalur transportasi utama masyarakat dari Hulu Kuantan hingga Cerenti.',
+      scale: 0.5
+    },
+    // 3. Pengangkutan hasil bumi (buah, tebu)
     {
       model: '/models/banana.glb',
-      script: 'Bananas have been cultivated in Indonesia for thousands of years as a staple food, providing nutrition to generations.',
-      scale: 0.5,
-      name: 'Ancient Banana'
+      script: 'Jalur digunakan untuk mengangkut hasil bumi seperti buah-buahan lokal dan tebu ke hilir sungai.',
+      scale: 0.5
+    },
+    // 4. Perahu dihias kepala buaya/ular
+    {
+      model: '/models/cartoon_crocodile_croco-roco.glb',
+      script: 'Perahu memanjang ini dihias dengan ornamen kepala buaya atau ular, melambangkan budaya setempat.',
+      scale: 0.3
+    },
+    // 5. Tongkang kerajaan
+    {
+      model: '/models/crown.glb',
+      script: 'Seiring waktu, perahu jalur menjadi tongkang kerajaan yang megah untuk para bangsawan dan raja. Pada masa penjajahan Belanda, Pacu Jalur juga diadakan untuk memperingati hari lahir Ratu Wilhelmina.',
+      scale: 0.4
+    },
+    // 6. Pacu Jalur mendunia & kemerdekaan
+    {
+      model: '/models/globe.glb',
+      script: 'Setelah kemerdekaan Indonesia, Pacu Jalur menjadi festival rakyat untuk merayakan Hari Kemerdekaan Republik Indonesia. Kini, Pacu Jalur telah mendunia dan menjadi kebanggaan budaya Indonesia di mata dunia.',
+      scale: 0.5
     }
   ];
 
