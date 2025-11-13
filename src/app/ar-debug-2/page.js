@@ -25,6 +25,7 @@ export default function ARDebug2Page() {
   const autoPlayTimerRef = useRef(null);
   const currentSceneRef = useRef(0);
   const hasSpokenRef = useRef(false);
+  const micIndicatorRef = useRef(null);
 
   // Scenes with models and scripts
   const scenes = [
@@ -104,6 +105,93 @@ export default function ARDebug2Page() {
     window.speechSynthesis.speak(utterance);
   };
 
+  // Load model for specific scene
+  const loadModelForScene = async (sceneIndex) => {
+    try {
+      const scene = scenes[sceneIndex];
+      addLog(`🔧 Loading ${scene.name} from ${scene.model}...`);
+
+      const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js');
+      const loader = new GLTFLoader();
+      const modelUrl = window.location.origin + scene.model;
+      addLog(`📡 Model URL: ${modelUrl}`);
+
+      return new Promise((resolve, reject) => {
+        loader.load(
+          modelUrl,
+          (gltf) => {
+            const model = gltf.scene;
+            model.scale.set(scene.scale, scene.scale, scene.scale);
+            addLog(`✅ ${scene.name} loaded successfully!`);
+            resolve(model);
+          },
+          (progress) => {
+            if (progress.lengthComputable) {
+              const percent = (progress.loaded / progress.total * 100).toFixed(0);
+              addLog(`⏳ Loading ${scene.name}: ${percent}%`);
+            }
+          },
+          (error) => {
+            addLog(`❌ Error loading ${scene.name}: ${error.message}`);
+            reject(error);
+          }
+        );
+      });
+    } catch (e) {
+      addLog(`❌ Error setting up loader: ${e.message}`);
+      throw e;
+    }
+  };
+
+  // Switch to next scene
+  const nextScene = async () => {
+    if (currentSceneRef.current < scenes.length - 1) {
+      const newScene = currentSceneRef.current + 1;
+      addLog(`➡️ Switching to scene ${newScene + 1}: ${scenes[newScene].name}`);
+      setCurrentScene(newScene);
+      currentSceneRef.current = newScene;
+
+      // Load new model
+      if (sessionActive && rendererRef.current) {
+        try {
+          addLog(`📦 Loading ${scenes[newScene].name}...`);
+          const model = await loadModelForScene(newScene);
+          rendererRef.current.loadedModel = model;
+          addLog(`✅ Model loaded into memory`);
+
+          // If there's already a placed model, automatically replace it
+          if (placedModelRef.current) {
+            addLog(`🔄 Auto-replacing model...`);
+
+            // Save old position
+            const oldPosition = placedModelRef.current.position.clone();
+
+            // Remove old model
+            rendererRef.current.scene.remove(placedModelRef.current);
+            addLog(`🗑️ Old model removed from scene`);
+
+            // Place new model at same position
+            const newPlacedModel = model.clone();
+            newPlacedModel.position.copy(oldPosition);
+            rendererRef.current.scene.add(newPlacedModel);
+            placedModelRef.current = newPlacedModel;
+
+            addLog(`✅ ${scenes[newScene].name} placed at (${oldPosition.x.toFixed(2)}, ${oldPosition.y.toFixed(2)}, ${oldPosition.z.toFixed(2)})`);
+            
+            // Speak new scene script
+            speakText(scenes[newScene].script, newScene);
+          } else {
+            addLog(`⚠️ No model placed yet (tap to place)`);
+          }
+        } catch (e) {
+          addLog(`❌ Failed to load: ${e.message}`);
+        }
+      }
+    } else {
+      addLog('📍 Last scene reached');
+    }
+  };
+
   // Check WebXR support
   useEffect(() => {
     const checkSupport = async () => {
@@ -168,6 +256,100 @@ export default function ARDebug2Page() {
           return sprite;
         };
 
+        // Function to create microphone icon sprite
+        const createMicIconSprite = () => {
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.width = 256;
+          canvas.height = 256;
+          
+          // Clear background (transparent)
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          
+          const centerX = canvas.width / 2;
+          const centerY = canvas.height / 2;
+          
+          // Draw white circle background
+          context.fillStyle = '#FFFFFF';
+          context.beginPath();
+          context.arc(centerX, centerY, 90, 0, Math.PI * 2);
+          context.fill();
+          
+          // Add subtle shadow/glow
+          context.shadowColor = 'rgba(0, 0, 0, 0.3)';
+          context.shadowBlur = 20;
+          context.shadowOffsetX = 0;
+          context.shadowOffsetY = 5;
+          
+          // Redraw circle with shadow
+          context.beginPath();
+          context.arc(centerX, centerY, 90, 0, Math.PI * 2);
+          context.fill();
+          
+          // Reset shadow
+          context.shadowColor = 'transparent';
+          context.shadowBlur = 0;
+          context.shadowOffsetX = 0;
+          context.shadowOffsetY = 0;
+          
+          // Draw microphone icon (dark color for contrast)
+          context.strokeStyle = '#1E3A8A';
+          context.fillStyle = '#1E3A8A';
+          context.lineWidth = 10;
+          context.lineCap = 'round';
+          context.lineJoin = 'round';
+          
+          // Mic capsule (rounded rectangle)
+          context.beginPath();
+          context.roundRect(centerX - 22, centerY - 45, 44, 70, 22);
+          context.fill();
+          
+          // Horizontal lines on mic capsule for detail
+          context.strokeStyle = '#3B82F6';
+          context.lineWidth = 3;
+          for (let i = 0; i < 3; i++) {
+            const y = centerY - 30 + (i * 20);
+            context.beginPath();
+            context.moveTo(centerX - 15, y);
+            context.lineTo(centerX + 15, y);
+            context.stroke();
+          }
+          
+          // Reset style for stand
+          context.strokeStyle = '#1E3A8A';
+          context.lineWidth = 10;
+          
+          // Mic stand arc
+          context.beginPath();
+          context.arc(centerX, centerY + 25, 30, 0, Math.PI, false);
+          context.stroke();
+          
+          // Vertical stand line
+          context.beginPath();
+          context.moveTo(centerX, centerY + 25);
+          context.lineTo(centerX, centerY + 55);
+          context.stroke();
+          
+          // Base (wider and more prominent)
+          context.lineWidth = 12;
+          context.beginPath();
+          context.moveTo(centerX - 35, centerY + 55);
+          context.lineTo(centerX + 35, centerY + 55);
+          context.stroke();
+          
+          const texture = new THREE.CanvasTexture(canvas);
+          const spriteMaterial = new THREE.SpriteMaterial({ 
+            map: texture,
+            transparent: true,
+            opacity: 0.95,
+            depthTest: false,
+            depthWrite: false
+          });
+          const sprite = new THREE.Sprite(spriteMaterial);
+          sprite.scale.set(0.2, 0.2, 1);
+          return sprite;
+        };
+
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
@@ -228,6 +410,13 @@ export default function ARDebug2Page() {
         scene.add(scanningText);
         textSpriteRef.current = { scanning: scanningText, createTextSprite };
         addLog('✅ Text sprites created');
+
+        // Create microphone indicator sprite
+        const micIndicator = createMicIconSprite();
+        micIndicator.visible = false;
+        scene.add(micIndicator);
+        micIndicatorRef.current = micIndicator;
+        addLog('✅ Microphone indicator created');
 
         rendererRef.current = { THREE, renderer, scene, camera, reticleMaterial, statusMaterial, createTextSprite };
         addLog('✅ Three.js initialized successfully');
@@ -346,6 +535,26 @@ export default function ARDebug2Page() {
             if (placedModelRef.current) {
               placedModelRef.current.rotation.y += 0.01;
             }
+
+            // Position and animate microphone indicator
+            const micIndicator = micIndicatorRef.current;
+            if (micIndicator && camera) {
+              const cameraDirection = new THREE.Vector3();
+              camera.getWorldDirection(cameraDirection);
+              const micPosition = camera.position.clone();
+              micPosition.add(cameraDirection.multiplyScalar(0.8)); // 0.8m in front
+              micPosition.y -= 0.35; // Bottom of view
+              micIndicator.position.copy(micPosition);
+              micIndicator.lookAt(camera.position);
+              
+              // Pulsing animation when speaking
+              if (micIndicator.visible) {
+                const pulseScale = 0.2 + Math.sin(timestamp * 0.008) * 0.025;
+                micIndicator.scale.set(pulseScale, pulseScale, 1);
+                // Pulse opacity
+                micIndicator.material.opacity = 0.9 + Math.sin(timestamp * 0.006) * 0.1;
+              }
+            }
           }
 
           renderer.render(scene, camera);
@@ -364,6 +573,18 @@ export default function ARDebug2Page() {
       }
     };
   }, []);
+
+  // Sync mic indicator with isSpeaking state
+  useEffect(() => {
+    if (micIndicatorRef.current) {
+      micIndicatorRef.current.visible = isSpeaking;
+      if (isSpeaking) {
+        addLog('🎤 Mic indicator shown');
+      } else {
+        addLog('🎤 Mic indicator hidden');
+      }
+    }
+  }, [isSpeaking]);
 
   // Start AR session
   const startAR = async () => {
