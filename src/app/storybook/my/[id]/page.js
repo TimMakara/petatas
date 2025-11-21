@@ -245,7 +245,7 @@ export default function MyStorybookPage() {
           </div>
           <p className="leading-relaxed mb-6 relative z-10" style={{
             color: '#1B1B1E',
-            textShadow: '0 0 3px rgba(138, 127, 216, 0.1)'
+            textShadow: '0 0 3px rgba(99, 121, 185, 0.1)'
           }}>
             {storybook.description}
           </p>
@@ -310,7 +310,7 @@ export default function MyStorybookPage() {
             {/* Question */}
             <h3 className="text-2xl font-semibold mb-6" style={{
               color: '#1B1B1E',
-              textShadow: '0 0 15px rgba(138, 127, 216, 0.2)'
+              textShadow: '0 0 15px rgba(99, 121, 185, 0.2)'
             }}>
               Anda suka dengan cerita ini?
             </h3>
