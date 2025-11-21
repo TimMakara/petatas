@@ -31,7 +31,7 @@ export default function MitraOnboardingPage() {
       background: 'linear-gradient(135deg, #ffffff 0%, #f8f5ff 50%, #fff9f5 100%)'
     }}>
       {/* Animated Background */}
-      <div className="fixed inset-0 pointer-events-none">
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ maxWidth: 'inherit' }}>
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: 'linear-gradient(#6379B9 1px, transparent 1px), linear-gradient(90deg, #6379B9 1px, transparent 1px)',
           backgroundSize: '50px 50px',

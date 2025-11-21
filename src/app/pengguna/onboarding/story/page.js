@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronRight, Sparkles, Zap, Gift, ArrowRight, Smartphone, Shield, TrendingUp, Rocket } from 'lucide-react';
 
@@ -9,6 +9,7 @@ export default function PenggunaStoryPage() {
   const [userData, setUserData] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [canSkip, setCanSkip] = useState(false);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     const user = localStorage.getItem('petatasUser');
@@ -26,30 +27,43 @@ export default function PenggunaStoryPage() {
     return () => clearTimeout(timer);
   }, [router]);
 
+  // Play audio when slide changes
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(err => console.log('Audio play failed:', err));
+    }
+  }, [currentSlide]);
+
   const slides = [
     {
       icon: Sparkles,
       title: 'Kenalan dengan QRIS',
       description: `Hai ${userData?.nama || 'Kak'}! QRIS adalah cara bayar yang super praktis. Tinggal scan QR, bayar tanpa ribet kembalian!`,
-      image: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=800&h=1000&fit=crop&q=80'
+      image: '/onboarding/pengguna-1.png',
+      audio: '/audio/pengguna-halaman1.mp3'
     },
     {
       icon: Zap,
       title: 'Cepat & Aman',
       description: 'Ga perlu antri lama, ga khawatir uang hilang. Semua transaksi tercatat dengan aman dan real-time!',
-      image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=1000&fit=crop&q=80'
+      image: '/onboarding/pengguna-2.png',
+      audio: '/audio/pengguna-halaman2.mp3'
     },
     {
       icon: Gift,
       title: 'Dapat Hadiah!',
       description: 'Setiap transaksi QRIS, Anda bisa dapat poin dan cashback. Kumpulin poin, tukar hadiah menarik!',
-      image: 'https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?w=800&h=1000&fit=crop&q=80'
+      image: '/onboarding/pengguna-3.png',
+      audio: '/audio/pengguna-halaman3.mp3'
     },
     {
       icon: ArrowRight,
       title: 'Yuk Mulai!',
       description: 'Siap jelajahi dunia pembayaran digital? Mari kita mulai perjalanan QRIS Anda!',
-      image: 'https://images.unsplash.com/photo-1559526324-593bc073d938?w=800&h=1000&fit=crop&q=80'
+      image: '/onboarding/pengguna-4.png',
+      audio: '/audio/pengguna-halaman4.mp3'
     }
   ];
 
@@ -87,7 +101,7 @@ export default function PenggunaStoryPage() {
       background: 'linear-gradient(135deg, #ffffff 0%, #f8f5ff 50%, #fff9f5 100%)'
     }}>
       {/* Animated Background */}
-      <div className="fixed inset-0 pointer-events-none">
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ maxWidth: 'inherit' }}>
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: 'linear-gradient(#6379B9 1px, transparent 1px), linear-gradient(90deg, #6379B9 1px, transparent 1px)',
           backgroundSize: '50px 50px',
@@ -123,6 +137,9 @@ export default function PenggunaStoryPage() {
           {canSkip ? 'Lewati' : 'Lewati (30s)'}
         </button>
       </div>
+
+      {/* Audio Element */}
+      <audio ref={audioRef} src={slide.audio} />
 
       {/* Story Content */}
       <div className="flex-1 flex flex-col items-center justify-center w-full max-w-2xl mx-auto relative z-10">

@@ -261,11 +261,11 @@ export default function QuestionnairePage() {
   const QuestionIcon = currentQuestion.icon;
 
   return (
-    <div className="min-h-screen flex flex-col px-4 pt-6 pb-8 relative overflow-hidden" style={{
+    <div className="h-screen flex flex-col px-4 pt-6 pb-8 relative overflow-y-auto" style={{
       background: 'linear-gradient(135deg, #ffffff 0%, #f8f5ff 50%, #fff9f5 100%)'
     }}>
       {/* Animated Background Elements */}
-      <div className="fixed inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: 'linear-gradient(#6379B9 1px, transparent 1px), linear-gradient(90deg, #6379B9 1px, transparent 1px)',
           backgroundSize: '50px 50px',

@@ -42,11 +42,11 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-8 relative overflow-hidden" style={{
+    <div className="h-screen flex items-center justify-center px-4 py-8 relative overflow-hidden" style={{
       background: 'linear-gradient(135deg, #ffffff 0%, #f8f5ff 50%, #fff9f5 100%)'
     }}>
       {/* Animated Background Elements */}
-      <div className="fixed inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Animated Grid */}
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: 'linear-gradient(#6379B9 1px, transparent 1px), linear-gradient(90deg, #6379B9 1px, transparent 1px)',

@@ -34,25 +34,25 @@ export default function MitraStoryPage() {
       icon: TrendingUp,
       title: 'Tingkatkan Omzet',
       description: `${userData?.nama || 'Kak'}, bayangkan pelanggan bisa bayar dengan mudah tanpa ribet uang pas. Usaha jadi lebih cepat, pelanggan makin banyak!`,
-      image: 'https://images.unsplash.com/photo-1556740758-90de374c12ad?w=800&h=1000&fit=crop&q=80'
+      image: '/onboarding/mitra-1.png'
     },
     {
       icon: Shield,
       title: 'Aman & Praktis',
       description: 'Ga perlu khawatir uang palsu atau uang hilang. Semua transaksi tercatat otomatis, lebih aman dan transparan!',
-      image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=1000&fit=crop&q=80'
+      image: '/onboarding/mitra-2.png'
     },
     {
       icon: Users,
       title: 'Jangkau Lebih Luas',
       description: 'Pelanggan jaman sekarang suka bayar digital. Dengan QRIS, usaha Anda bisa ditemukan lebih banyak orang!',
-      image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&h=1000&fit=crop&q=80'
+      image: '/onboarding/mitra-3.png'
     },
     {
       icon: ArrowRight,
       title: 'Ayo Mulai!',
       description: 'Siap tingkatkan usaha Anda? Mari bergabung dengan ribuan mitra QRIS lainnya!',
-      image: 'https://images.unsplash.com/photo-1559526324-593bc073d938?w=800&h=1000&fit=crop&q=80'
+      image: '/onboarding/mitra-4.png'
     }
   ];
 
@@ -61,25 +61,25 @@ export default function MitraStoryPage() {
       icon: TrendingUp,
       title: 'Maksimalkan QRIS',
       description: `Selamat ${userData?.nama || 'Kak'}! Anda sudah punya QRIS. Sekarang saatnya maksimalkan potensi usaha Anda dengan challenge dan rewards!`,
-      image: 'https://images.unsplash.com/photo-1556740758-90de374c12ad?w=800&h=1000&fit=crop&q=80'
+      image: '/onboarding/mitra-1.png'
     },
     {
       icon: Shield,
       title: 'Dapatkan Insight',
       description: 'Lacak performa transaksi, lihat jam ramai pelanggan, dan dapatkan tips untuk tingkatkan penjualan!',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=1000&fit=crop&q=80'
+      image: '/onboarding/mitra-2.png'
     },
     {
       icon: Users,
       title: 'Komunitas & Rewards',
       description: 'Bergabung dengan komunitas mitra, ikuti challenge, dan dapatkan hadiah menarik setiap minggu!',
-      image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&h=1000&fit=crop&q=80'
+      image: '/onboarding/mitra-3.png'
     },
     {
       icon: ArrowRight,
       title: 'Tingkatkan Terus!',
       description: 'Mari bersama-sama kembangkan usaha dan raih kesuksesan!',
-      image: 'https://images.unsplash.com/photo-1559526324-593bc073d938?w=800&h=1000&fit=crop&q=80'
+      image: '/onboarding/mitra-4.png'
     }
   ];
 
@@ -118,7 +118,7 @@ export default function MitraStoryPage() {
       background: 'linear-gradient(135deg, #ffffff 0%, #f8f5ff 50%, #fff9f5 100%)'
     }}>
       {/* Animated Background */}
-      <div className="fixed inset-0 pointer-events-none">
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ maxWidth: 'inherit' }}>
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: 'linear-gradient(#6379B9 1px, transparent 1px), linear-gradient(90deg, #6379B9 1px, transparent 1px)',
           backgroundSize: '50px 50px',
