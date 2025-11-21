@@ -71,7 +71,7 @@ export default function PenggunaOnboardingPage() {
             color: '#1B1B1E',
             textShadow: '0 0 20px rgba(99, 121, 185, 0.2)'
           }}>
-            Selamat Datang, {userData.nama}! 🎉
+            Selamat Datang, {userData.nama}!
           </h1>
           <p className="text-sm" style={{
             color: '#8B7355',

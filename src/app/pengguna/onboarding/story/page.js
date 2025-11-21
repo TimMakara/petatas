@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronRight, Sparkles, Zap, Gift, ArrowRight } from 'lucide-react';
+import { ChevronRight, Sparkles, Zap, Gift, ArrowRight, Smartphone, Shield, TrendingUp, Rocket } from 'lucide-react';
 
 export default function PenggunaStoryPage() {
   const router = useRouter();
@@ -73,13 +73,14 @@ export default function PenggunaStoryPage() {
       const updatedUser = { ...userData, onboardingComplete: true };
       localStorage.setItem('petatasUser', JSON.stringify(updatedUser));
     }
-    router.push('/galeri');
+    router.push('/pengguna/dashboard');
   };
 
   if (!userData) return null;
 
   const slide = slides[currentSlide];
   const SlideIcon = slide.icon;
+  const IllustrationIcon = slide.illustration;
 
   return (
     <div className="min-h-screen flex flex-col px-4 py-6 relative overflow-hidden" style={{
