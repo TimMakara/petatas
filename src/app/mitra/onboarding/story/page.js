@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronRight, TrendingUp, Shield, Users, ArrowRight } from 'lucide-react';
 
@@ -9,6 +9,7 @@ export default function MitraStoryPage() {
   const [userData, setUserData] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [canSkip, setCanSkip] = useState(false);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     const user = localStorage.getItem('petatasUser');
@@ -26,6 +27,15 @@ export default function MitraStoryPage() {
     return () => clearTimeout(timer);
   }, [router]);
 
+  // Play audio when slide changes
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(err => console.log('Audio play failed:', err));
+    }
+  }, [currentSlide]);
+
   const qrisStatus = userData?.questionnaire?.qrisStatus;
 
   // Different story for merchants with and without QRIS
@@ -34,25 +44,29 @@ export default function MitraStoryPage() {
       icon: TrendingUp,
       title: 'Tingkatkan Omzet',
       description: `${userData?.nama || 'Kak'}, bayangkan pelanggan bisa bayar dengan mudah tanpa ribet uang pas. Usaha jadi lebih cepat, pelanggan makin banyak!`,
-      image: '/onboarding/mitra-1.png'
+      image: '/onboarding/mitra-1.png',
+      audio: '/audio/mitra-halaman1.mp3'
     },
     {
       icon: Shield,
       title: 'Aman & Praktis',
       description: 'Ga perlu khawatir uang palsu atau uang hilang. Semua transaksi tercatat otomatis, lebih aman dan transparan!',
-      image: '/onboarding/mitra-2.png'
+      image: '/onboarding/mitra-2.png',
+      audio: '/audio/mitra-halaman2.mp3'
     },
     {
       icon: Users,
       title: 'Jangkau Lebih Luas',
       description: 'Pelanggan jaman sekarang suka bayar digital. Dengan QRIS, usaha Anda bisa ditemukan lebih banyak orang!',
-      image: '/onboarding/mitra-3.png'
+      image: '/onboarding/mitra-3.png',
+      audio: '/audio/mitra-halaman3.mp3'
     },
     {
       icon: ArrowRight,
       title: 'Ayo Mulai!',
       description: 'Siap tingkatkan usaha Anda? Mari bergabung dengan ribuan mitra QRIS lainnya!',
-      image: '/onboarding/mitra-4.png'
+      image: '/onboarding/mitra-4.png',
+      audio: '/audio/mitra-halaman4.mp3'
     }
   ];
 
@@ -61,25 +75,29 @@ export default function MitraStoryPage() {
       icon: TrendingUp,
       title: 'Maksimalkan QRIS',
       description: `Selamat ${userData?.nama || 'Kak'}! Anda sudah punya QRIS. Sekarang saatnya maksimalkan potensi usaha Anda dengan challenge dan rewards!`,
-      image: '/onboarding/mitra-1.png'
+      image: '/onboarding/mitra-1.png',
+      audio: '/audio/mitra-halaman1.mp3'
     },
     {
       icon: Shield,
       title: 'Dapatkan Insight',
       description: 'Lacak performa transaksi, lihat jam ramai pelanggan, dan dapatkan tips untuk tingkatkan penjualan!',
-      image: '/onboarding/mitra-2.png'
+      image: '/onboarding/mitra-2.png',
+      audio: '/audio/mitra-halaman2.mp3'
     },
     {
       icon: Users,
       title: 'Komunitas & Rewards',
       description: 'Bergabung dengan komunitas mitra, ikuti challenge, dan dapatkan hadiah menarik setiap minggu!',
-      image: '/onboarding/mitra-3.png'
+      image: '/onboarding/mitra-3.png',
+      audio: '/audio/mitra-halaman3.mp3'
     },
     {
       icon: ArrowRight,
       title: 'Tingkatkan Terus!',
       description: 'Mari bersama-sama kembangkan usaha dan raih kesuksesan!',
-      image: '/onboarding/mitra-4.png'
+      image: '/onboarding/mitra-4.png',
+      audio: '/audio/mitra-halaman4.mp3'
     }
   ];
 
@@ -105,7 +123,7 @@ export default function MitraStoryPage() {
       const updatedUser = { ...userData, onboardingComplete: true };
       localStorage.setItem('petatasUser', JSON.stringify(updatedUser));
     }
-    router.push('/galeri');
+    router.push('/mitra/dashboard');
   };
 
   if (!userData) return null;
@@ -157,6 +175,9 @@ export default function MitraStoryPage() {
           {canSkip ? 'Lewati' : 'Lewati (30s)'}
         </button>
       </div>
+
+      {/* Audio Element */}
+      <audio ref={audioRef} src={slide.audio} />
 
       {/* Story Content */}
       <div className="flex-1 flex flex-col items-center justify-center w-full max-w-2xl mx-auto relative z-10">
