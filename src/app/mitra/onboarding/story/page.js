@@ -105,7 +105,7 @@ export default function MitraStoryPage() {
       const updatedUser = { ...userData, onboardingComplete: true };
       localStorage.setItem('petatasUser', JSON.stringify(updatedUser));
     }
-    router.push('/galeri');
+    router.push('/mitra/dashboard');
   };
 
   if (!userData) return null;
