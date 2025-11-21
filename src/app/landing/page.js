@@ -35,7 +35,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="w-full min-h-screen px-4 py-8 sm:px-6 flex items-center justify-center relative z-10">
         <div className="w-full max-w-xl mx-auto">
-          <div className="flex flex-col items-center text-center space-y-8">
+          <div className="flex flex-col items-center text-center space-y-12">
             {/* Logo with glow effect */}
             <div className="flex justify-center -mb-4 relative">
               <div className="absolute inset-0 rounded-full opacity-30 blur-3xl" style={{
@@ -61,7 +61,7 @@ export default function LandingPage() {
             </h1>
 
             {/* Description */}
-            <p className="text-base sm:text-lg leading-relaxed" style={{
+            <p className="text-base sm:text-lg leading-relaxed mt-8" style={{
               color: '#1B1B1E',
               textShadow: '0 0 10px rgba(99, 121, 185, 0.1)'
             }}>
