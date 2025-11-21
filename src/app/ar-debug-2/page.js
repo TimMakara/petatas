@@ -1024,13 +1024,13 @@ export default function ARDebug2Page() {
             <div className="px-4 sm:px-6 lg:px-8 py-4">
               <div className="max-w-7xl mx-auto flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-xl font-bold" style={{color: '#473C8B'}}>AR Debug v2 - Improved UX</h1>
+                  <h1 className="text-xl font-bold" style={{color: '#6379B9'}}>AR Debug v2 - Improved UX</h1>
                 </div>
                 <div className="flex items-center gap-4">
-                  <a href="/" className="text-sm font-medium transition" style={{color: '#473C8B'}}>
+                  <a href="/" className="text-sm font-medium transition" style={{color: '#6379B9'}}>
                     ← Home
                   </a>
-                  <a href="/ar-debug" className="text-sm font-medium transition" style={{color: '#473C8B'}}>
+                  <a href="/ar-debug" className="text-sm font-medium transition" style={{color: '#6379B9'}}>
                     Debug v1
                   </a>
                 </div>
@@ -1044,7 +1044,7 @@ export default function ARDebug2Page() {
                 <h2 className="text-4xl sm:text-5xl font-bold" style={{color: '#1B1B1E'}}>
                   Improved AR Experience
                 </h2>
-                <p className="text-lg" style={{color: '#473C8B'}}>
+                <p className="text-lg" style={{color: '#6379B9'}}>
                   Better visual feedback for surface detection
                 </p>
               </div>
@@ -1056,8 +1056,8 @@ export default function ARDebug2Page() {
                   disabled={!arSupported}
                   className="px-12 py-5 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-xl"
                   style={{
-                    backgroundColor: arSupported ? '#473C8B' : '#ccc',
-                    boxShadow: arSupported ? '0 4px 12px rgba(71, 60, 139, 0.3)' : 'none'
+                    backgroundColor: arSupported ? '#6379B9' : '#ccc',
+                    boxShadow: arSupported ? '0 4px 12px rgba(99, 121, 185, 0.3)' : 'none'
                   }}
                 >
                   {arSupported ? '🚀 Start AR Experience' : '❌ AR Not Supported'}
@@ -1067,7 +1067,7 @@ export default function ARDebug2Page() {
               {/* Improvements List */}
               <div className="rounded-3xl p-8 backdrop-blur-sm mb-8" style={{backgroundColor: 'rgba(76, 175, 80, 0.1)', border: '2px solid #4CAF50'}}>
                 <h3 className="font-bold text-xl mb-4" style={{color: '#1B1B1E'}}>✨ UX Improvements:</h3>
-                <ul className="space-y-3" style={{color: '#473C8B'}}>
+                <ul className="space-y-3" style={{color: '#6379B9'}}>
                   <li className="flex items-start gap-2">
                     <span className="text-2xl">🟢</span>
                     <div>
@@ -1100,9 +1100,9 @@ export default function ARDebug2Page() {
               </div>
 
               {/* How to Use */}
-              <div className="rounded-3xl p-8 mb-8" style={{backgroundColor: 'rgba(71, 60, 139, 0.1)', border: '1px solid #473C8B'}}>
-                <h3 className="font-bold text-xl mb-4" style={{color: '#473C8B'}}>📱 How to Use:</h3>
-                <ol className="space-y-3 list-decimal list-inside" style={{color: '#473C8B'}}>
+              <div className="rounded-3xl p-8 mb-8" style={{backgroundColor: 'rgba(99, 121, 185, 0.1)', border: '1px solid #6379B9'}}>
+                <h3 className="font-bold text-xl mb-4" style={{color: '#6379B9'}}>📱 How to Use:</h3>
+                <ol className="space-y-3 list-decimal list-inside" style={{color: '#6379B9'}}>
                   <li><strong>Click "Start AR Experience"</strong> button</li>
                   <li><strong>Allow camera permission</strong> if prompted</li>
                   <li><strong>Move device slowly</strong> to scan the environment</li>
@@ -1146,3 +1146,4 @@ export default function ARDebug2Page() {
     </div>
   );
 }
+

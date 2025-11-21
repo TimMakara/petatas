@@ -53,7 +53,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, #473C8B 0%, #D4A373 50%, #FFC857 100%);
+    background: linear-gradient(135deg, #6379B9 0%, #D4A373 50%, #FFC857 100%);
     filter: blur(60px);
     opacity: 0.3;
     z-index: 0;
@@ -114,13 +114,13 @@ body {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border-top: 2px solid rgba(138, 127, 216, 0.3);
+  border-top: 2px solid rgba(99, 121, 185, 0.3);
   padding: 0.75rem 0 calc(0.75rem + env(safe-area-inset-bottom));
   z-index: 50;
   box-shadow: 
     0 -8px 32px rgba(0, 0, 0, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 0 60px rgba(138, 127, 216, 0.2);
+    0 0 60px rgba(99, 121, 185, 0.2);
 }
 
 /* Mobile: Full width */
@@ -149,7 +149,7 @@ body {
   justify-content: center;
   gap: 0.25rem;
   padding: 0.625rem 0.5rem;
-  color: #473C8B;
+  color: #6379B9;
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 1rem;
@@ -158,25 +158,25 @@ body {
 }
 
 .bottom-nav-item:hover {
-  color: #8A7FD8;
-  background: rgba(138, 127, 216, 0.08);
+  color: #9DB4E8;
+  background: rgba(99, 121, 185, 0.08);
   transform: translateY(-2px);
 }
 
 .bottom-nav-item.active {
   color: var(--item-color, #D4A373);
-  background: rgba(138, 127, 216, 0.12);
-  border: 1.5px solid rgba(138, 127, 216, 0.25);
+  background: rgba(99, 121, 185, 0.12);
+  border: 1.5px solid rgba(99, 121, 185, 0.25);
   box-shadow: 
-    0 0 20px var(--item-neon, rgba(138, 127, 216, 0.25)),
-    inset 0 0 15px rgba(138, 127, 216, 0.08);
+    0 0 20px var(--item-neon, rgba(99, 121, 185, 0.25)),
+    inset 0 0 15px rgba(99, 121, 185, 0.08);
 }
 
 .bottom-nav-item.active:hover {
   transform: translateY(-3px) scale(1.02);
   box-shadow: 
-    0 0 30px var(--item-neon, rgba(138, 127, 216, 0.35)),
-    inset 0 0 20px rgba(138, 127, 216, 0.1);
+    0 0 30px var(--item-neon, rgba(99, 121, 185, 0.35)),
+    inset 0 0 20px rgba(99, 121, 185, 0.1);
 }
 
 .bottom-nav-item svg {
@@ -197,7 +197,7 @@ body {
 
 /* AR Button - Enhanced Modern Design */
 .bottom-nav-item.ar-button {
-  background: linear-gradient(135deg, var(--item-color, #473C8B) 0%, color-mix(in srgb, var(--item-color, #473C8B) 80%, black) 100%);
+  background: linear-gradient(135deg, var(--item-color, #6379B9) 0%, color-mix(in srgb, var(--item-color, #6379B9) 80%, black) 100%);
   color: white;
   border-radius: 50%;
   border: 3px solid rgba(255, 255, 255, 0.9);
@@ -206,8 +206,8 @@ body {
   padding: 0.5rem 0;
   margin-top: -28px;
   box-shadow: 
-    0 8px 24px color-mix(in srgb, var(--item-color, #473C8B) 40%, transparent),
-    0 0 40px color-mix(in srgb, var(--item-neon, #8A7FD8) 25%, transparent),
+    0 8px 24px color-mix(in srgb, var(--item-color, #6379B9) 40%, transparent),
+    0 0 40px color-mix(in srgb, var(--item-neon, #9DB4E8) 25%, transparent),
     inset 0 0 20px rgba(255, 255, 255, 0.2);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   gap: 0.15rem;
@@ -221,7 +221,7 @@ body {
   inset: -3px;
   border-radius: 50%;
   padding: 3px;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--item-neon, #8A7FD8) 60%, transparent), color-mix(in srgb, var(--item-color, #473C8B) 40%, transparent));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--item-neon, #9DB4E8) 60%, transparent), color-mix(in srgb, var(--item-color, #6379B9) 40%, transparent));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -236,8 +236,8 @@ body {
 .bottom-nav-item.ar-button:hover {
   transform: translateY(-30px) scale(1.08);
   box-shadow: 
-    0 12px 32px color-mix(in srgb, var(--item-color, #473C8B) 50%, transparent),
-    0 0 50px color-mix(in srgb, var(--item-neon, #8A7FD8) 35%, transparent),
+    0 12px 32px color-mix(in srgb, var(--item-color, #6379B9) 50%, transparent),
+    0 0 50px color-mix(in srgb, var(--item-neon, #9DB4E8) 35%, transparent),
     inset 0 0 30px rgba(255, 255, 255, 0.25);
   border-color: rgba(255, 255, 255, 1);
 }

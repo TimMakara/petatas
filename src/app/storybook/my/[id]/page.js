@@ -80,22 +80,22 @@ export default function MyStorybookPage() {
       {/* Header */}
       <div className="sticky top-0 z-10 px-4 py-4 flex items-center justify-between backdrop-blur-xl" style={{
         background: 'rgba(255, 255, 255, 0.9)',
-        borderBottom: '2px solid rgba(138, 127, 216, 0.25)',
-        boxShadow: '0 0 30px rgba(138, 127, 216, 0.15)'
+        borderBottom: '2px solid rgba(99, 121, 185, 0.25)',
+        boxShadow: '0 0 30px rgba(99, 121, 185, 0.15)'
       }}>
         <button
           onClick={() => router.back()}
           className="p-2 rounded-xl transition-all relative overflow-hidden group"
           style={{
-            background: 'rgba(138, 127, 216, 0.1)',
-            border: '2px solid rgba(138, 127, 216, 0.25)'
+            background: 'rgba(99, 121, 185, 0.1)',
+            border: '2px solid rgba(99, 121, 185, 0.25)'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(138, 127, 216, 0.15)';
-            e.currentTarget.style.boxShadow = '0 0 20px rgba(138, 127, 216, 0.3)';
+            e.currentTarget.style.background = 'rgba(99, 121, 185, 0.15)';
+            e.currentTarget.style.boxShadow = '0 0 20px rgba(99, 121, 185, 0.3)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(138, 127, 216, 0.1)';
+            e.currentTarget.style.background = 'rgba(99, 121, 185, 0.1)';
             e.currentTarget.style.boxShadow = 'none';
           }}
         >
@@ -111,7 +111,7 @@ export default function MyStorybookPage() {
           }} />
           <span className="font-semibold" style={{
             color: '#1B1B1E',
-            textShadow: '0 0 8px rgba(138, 127, 216, 0.2)'
+            textShadow: '0 0 8px rgba(99, 121, 185, 0.2)'
           }}>
             Lihat Storybook
           </span>
@@ -126,14 +126,14 @@ export default function MyStorybookPage() {
             <div className="relative w-24 h-24 rounded-full flex items-center justify-center overflow-hidden" style={{
               background: 'rgba(255, 255, 255, 0.7)',
               backdropFilter: 'blur(10px)',
-              border: '2px solid rgba(138, 127, 216, 0.4)',
-              boxShadow: `0 0 40px rgba(138, 127, 216, 0.3),
-                         inset 0 0 30px rgba(138, 127, 216, 0.1)`
+              border: '2px solid rgba(99, 121, 185, 0.4)',
+              boxShadow: `0 0 40px rgba(99, 121, 185, 0.3),
+                         inset 0 0 30px rgba(99, 121, 185, 0.1)`
             }}>
               {/* Rotating ring */}
               <div className="absolute inset-0 animate-spin" style={{animationDuration: '4s'}}>
                 <div className="w-full h-full rounded-full" style={{
-                  background: 'conic-gradient(from 0deg, transparent, rgba(138, 127, 216, 0.6), transparent)'
+                  background: 'conic-gradient(from 0deg, transparent, rgba(99, 121, 185, 0.6), transparent)'
                 }} />
               </div>
               <BookOpen className="w-12 h-12 relative z-10" style={{
@@ -182,7 +182,7 @@ export default function MyStorybookPage() {
           <div className="flex items-center justify-between mb-4 relative z-10">
             <h2 className="text-xl font-bold" style={{
               color: '#1B1B1E',
-              textShadow: '0 0 10px rgba(138, 127, 216, 0.2)'
+              textShadow: '0 0 10px rgba(99, 121, 185, 0.2)'
             }}>
               Tentang Storybook Ini
             </h2>
@@ -191,14 +191,14 @@ export default function MyStorybookPage() {
                 onClick={handleFavorite}
                 className="relative p-2 rounded-xl transition-all overflow-hidden group/btn"
                 style={{
-                  background: isFavorited ? 'rgba(239, 68, 68, 0.15)' : 'rgba(138, 127, 216, 0.1)',
-                  border: `2px solid ${isFavorited ? 'rgba(239, 68, 68, 0.4)' : 'rgba(138, 127, 216, 0.25)'}`,
+                  background: isFavorited ? 'rgba(239, 68, 68, 0.15)' : 'rgba(99, 121, 185, 0.1)',
+                  border: `2px solid ${isFavorited ? 'rgba(239, 68, 68, 0.4)' : 'rgba(99, 121, 185, 0.25)'}`,
                   boxShadow: isFavorited ? '0 0 20px rgba(239, 68, 68, 0.3)' : 'none'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.boxShadow = isFavorited 
                     ? '0 0 30px rgba(239, 68, 68, 0.5)' 
-                    : '0 0 20px rgba(138, 127, 216, 0.3)';
+                    : '0 0 20px rgba(99, 121, 185, 0.3)';
                   e.currentTarget.style.transform = 'scale(1.1)';
                 }}
                 onMouseLeave={(e) => {
@@ -255,7 +255,7 @@ export default function MyStorybookPage() {
           }}>
             <p className="text-sm font-semibold mb-2" style={{
               color: '#1B1B1E',
-              textShadow: '0 0 5px rgba(138, 127, 216, 0.15)'
+              textShadow: '0 0 5px rgba(99, 121, 185, 0.15)'
             }}>
               ID Storybook:
             </p>
@@ -291,17 +291,17 @@ export default function MyStorybookPage() {
           <div className="max-w-md mx-auto">
             {/* End of Story Badge */}
             <div className="inline-block px-8 py-3 rounded-full mb-6 relative overflow-hidden" style={{
-              background: 'rgba(71, 60, 139, 0.15)',
+              background: 'rgba(99, 121, 185, 0.15)',
               backdropFilter: 'blur(10px)',
-              border: '2px solid rgba(138, 127, 216, 0.4)',
-              boxShadow: '0 0 30px rgba(138, 127, 216, 0.3), inset 0 0 20px rgba(138, 127, 216, 0.1)'
+              border: '2px solid rgba(99, 121, 185, 0.4)',
+              boxShadow: '0 0 30px rgba(99, 121, 185, 0.3), inset 0 0 20px rgba(99, 121, 185, 0.1)'
             }}>
               <div className="absolute inset-0 animate-pulse opacity-30" style={{
-                background: 'radial-gradient(circle, rgba(138, 127, 216, 0.3), transparent 70%)'
+                background: 'radial-gradient(circle, rgba(99, 121, 185, 0.3), transparent 70%)'
               }} />
               <p className="font-bold text-lg relative z-10" style={{
-                color: '#473C8B',
-                textShadow: '0 0 10px rgba(138, 127, 216, 0.4)'
+                color: '#6379B9',
+                textShadow: '0 0 10px rgba(99, 121, 185, 0.4)'
               }}>
                 Akhir Cerita
               </p>
@@ -366,24 +366,24 @@ export default function MyStorybookPage() {
                 style={{
                   background: 'rgba(255, 255, 255, 0.6)',
                   color: '#1B1B1E',
-                  border: '2px solid rgba(138, 127, 216, 0.4)',
-                  boxShadow: '0 0 20px rgba(138, 127, 216, 0.2)',
+                  border: '2px solid rgba(99, 121, 185, 0.4)',
+                  boxShadow: '0 0 20px rgba(99, 121, 185, 0.2)',
                   backdropFilter: 'blur(10px)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 30px rgba(138, 127, 216, 0.35)';
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(99, 121, 185, 0.35)';
                   e.currentTarget.style.transform = 'scale(1.1)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(138, 127, 216, 0.2)';
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(99, 121, 185, 0.2)';
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
                 <Share2 className="w-5 h-5" style={{
-                  filter: 'drop-shadow(0 0 4px rgba(138, 127, 216, 0.5))'
+                  filter: 'drop-shadow(0 0 4px rgba(99, 121, 185, 0.5))'
                 }} />
                 <span style={{
-                  textShadow: '0 0 5px rgba(138, 127, 216, 0.3)'
+                  textShadow: '0 0 5px rgba(99, 121, 185, 0.3)'
                 }}>
                   Bagikan
                 </span>
@@ -430,17 +430,17 @@ export default function MyStorybookPage() {
                 onClick={() => router.push(`/marketplace?story=${storybook.id}`)}
                 className="relative w-full py-3 rounded-2xl font-bold text-white transition-all overflow-hidden group/btn"
                 style={{
-                  background: 'linear-gradient(135deg, #473C8B 0%, #6B5FBD 100%)',
-                  border: '2px solid rgba(138, 127, 216, 0.4)',
-                  boxShadow: '0 0 30px rgba(138, 127, 216, 0.3), inset 0 0 15px rgba(138, 127, 216, 0.1)',
+                  background: 'linear-gradient(135deg, #6379B9 0%, #7A8FD1 100%)',
+                  border: '2px solid rgba(99, 121, 185, 0.4)',
+                  boxShadow: '0 0 30px rgba(99, 121, 185, 0.3), inset 0 0 15px rgba(99, 121, 185, 0.1)',
                   textShadow: '0 0 10px rgba(255, 255, 255, 0.5)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 40px rgba(138, 127, 216, 0.5), inset 0 0 25px rgba(138, 127, 216, 0.15)';
+                  e.currentTarget.style.boxShadow = '0 0 40px rgba(99, 121, 185, 0.5), inset 0 0 25px rgba(99, 121, 185, 0.15)';
                   e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 30px rgba(138, 127, 216, 0.3), inset 0 0 15px rgba(138, 127, 216, 0.1)';
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(99, 121, 185, 0.3), inset 0 0 15px rgba(99, 121, 185, 0.1)';
                   e.currentTarget.style.transform = 'translateY(0) scale(1)';
                 }}
               >

@@ -410,13 +410,13 @@ export default function ARDebugPage() {
             <div className="px-4 sm:px-6 lg:px-8 py-4">
               <div className="max-w-7xl mx-auto flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-xl font-bold" style={{color: '#473C8B'}}>WebXR Debug Console</h1>
+                  <h1 className="text-xl font-bold" style={{color: '#6379B9'}}>WebXR Debug Console</h1>
                 </div>
                 <div className="flex items-center gap-4">
-                  <a href="/" className="text-sm font-medium transition" style={{color: '#473C8B'}}>
+                  <a href="/" className="text-sm font-medium transition" style={{color: '#6379B9'}}>
                     ← Home
                   </a>
-                  <a href="/ar" className="text-sm font-medium transition" style={{color: '#473C8B'}}>
+                  <a href="/ar" className="text-sm font-medium transition" style={{color: '#6379B9'}}>
                     AR Page
                   </a>
                 </div>
@@ -442,25 +442,25 @@ export default function ARDebugPage() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                 <div className="rounded-xl shadow-md p-6 text-center" style={{backgroundColor: 'white', border: '2px solid #D4A373'}}>
                   <div className="text-4xl mb-2">{arSupported ? '✅' : '❌'}</div>
-                  <div className="font-bold" style={{color: '#473C8B'}}>Basic AR</div>
+                  <div className="font-bold" style={{color: '#6379B9'}}>Basic AR</div>
                   <div className="text-sm text-gray-600">{arSupported ? 'Supported' : 'Not Supported'}</div>
                 </div>
 
                 <div className="rounded-xl shadow-md p-6 text-center" style={{backgroundColor: 'white', border: '2px solid #D4A373'}}>
                   <div className="text-4xl mb-2">{hitTestSupported ? '✅' : '❓'}</div>
-                  <div className="font-bold" style={{color: '#473C8B'}}>Hit Test</div>
+                  <div className="font-bold" style={{color: '#6379B9'}}>Hit Test</div>
                   <div className="text-sm text-gray-600">{hitTestSupported ? 'Enabled' : 'Unknown'}</div>
                 </div>
 
                 <div className="rounded-xl shadow-md p-6 text-center" style={{backgroundColor: 'white', border: '2px solid #D4A373'}}>
                   <div className="text-4xl mb-2">{planeDetectionSupported ? '✅' : '❓'}</div>
-                  <div className="font-bold" style={{color: '#473C8B'}}>Plane Detection</div>
+                  <div className="font-bold" style={{color: '#6379B9'}}>Plane Detection</div>
                   <div className="text-sm text-gray-600">{planeDetectionSupported ? 'Enabled' : 'Optional'}</div>
                 </div>
 
                 <div className="rounded-xl shadow-md p-6 text-center" style={{backgroundColor: 'white', border: '2px solid #D4A373'}}>
                   <div className="text-4xl mb-2">{rendererRef.current ? '✅' : '⏳'}</div>
-                  <div className="font-bold" style={{color: '#473C8B'}}>Three.js</div>
+                  <div className="font-bold" style={{color: '#6379B9'}}>Three.js</div>
                   <div className="text-sm text-gray-600">{rendererRef.current ? 'Ready' : 'Loading'}</div>
                 </div>
               </div>
@@ -472,46 +472,46 @@ export default function ARDebugPage() {
                   disabled={!arSupported || !rendererRef.current}
                   className="px-8 py-4 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
-                    backgroundColor: '#473C8B'
+                    backgroundColor: '#6379B9'
                   }}
                 >
                   🔍 Start AR Debug Session
                 </button>
-                <p className="mt-4 text-sm" style={{color: '#473C8B'}}>
+                <p className="mt-4 text-sm" style={{color: '#6379B9'}}>
                   This will test WebXR with <strong>hit-test</strong> (required) and <strong>plane-detection</strong> (optional)
                 </p>
               </div>
 
               {/* Debug Info */}
-              <div className="rounded-3xl p-6" style={{backgroundColor: 'rgba(71, 60, 139, 0.1)', border: '1px solid #473C8B'}}>
-                <h3 className="font-bold text-lg mb-4" style={{color: '#473C8B'}}>
+              <div className="rounded-3xl p-6" style={{backgroundColor: 'rgba(99, 121, 185, 0.1)', border: '1px solid #6379B9'}}>
+                <h3 className="font-bold text-lg mb-4" style={{color: '#6379B9'}}>
                   📋 Debug Information:
                 </h3>
                 <div className="space-y-2 mb-4">
-                  <div className="text-sm" style={{color: '#473C8B'}}>
+                  <div className="text-sm" style={{color: '#6379B9'}}>
                     <strong>Browser:</strong> {typeof navigator !== 'undefined' ? navigator.userAgent.split(' ').slice(-2).join(' ') : 'Unknown'}
                   </div>
-                  <div className="text-sm" style={{color: '#473C8B'}}>
+                  <div className="text-sm" style={{color: '#6379B9'}}>
                     <strong>Platform:</strong> {typeof navigator !== 'undefined' ? navigator.platform : 'Unknown'}
                   </div>
-                  <div className="text-sm" style={{color: '#473C8B'}}>
+                  <div className="text-sm" style={{color: '#6379B9'}}>
                     <strong>navigator.xr:</strong> {typeof navigator !== 'undefined' && navigator.xr ? 'Available' : 'Not Available'}
                   </div>
-                  <div className="text-sm" style={{color: '#473C8B'}}>
+                  <div className="text-sm" style={{color: '#6379B9'}}>
                     <strong>Device Memory:</strong> {typeof navigator !== 'undefined' && navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'Unknown'}
                   </div>
-                  <div className="text-sm" style={{color: '#473C8B'}}>
+                  <div className="text-sm" style={{color: '#6379B9'}}>
                     <strong>Hardware Concurrency:</strong> {typeof navigator !== 'undefined' ? navigator.hardwareConcurrency : 'Unknown'}
                   </div>
-                  <div className="text-sm" style={{color: '#473C8B'}}>
+                  <div className="text-sm" style={{color: '#6379B9'}}>
                     <strong>Required Features:</strong> ['hit-test']
                   </div>
-                  <div className="text-sm" style={{color: '#473C8B'}}>
+                  <div className="text-sm" style={{color: '#6379B9'}}>
                     <strong>Optional Features:</strong> ['dom-overlay', 'plane-detection']
                   </div>
                 </div>
 
-                <h4 className="font-bold text-md mb-2" style={{color: '#473C8B'}}>Console Logs:</h4>
+                <h4 className="font-bold text-md mb-2" style={{color: '#6379B9'}}>Console Logs:</h4>
                 <div className="bg-black rounded-lg p-4 max-h-96 overflow-y-auto">
                   {logs.length === 0 ? (
                     <div className="text-gray-400 text-sm">No logs yet...</div>
@@ -589,3 +589,4 @@ export default function ARDebugPage() {
     </div>
   );
 }
+

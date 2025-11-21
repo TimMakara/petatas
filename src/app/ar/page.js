@@ -434,7 +434,7 @@ export default function ARPage() {
           <div className="fixed inset-0 pointer-events-none">
             {/* Floating Orbs */}
             <div className="absolute top-20 left-10 w-64 h-64 rounded-full opacity-30" style={{
-              background: 'radial-gradient(circle, rgba(138, 127, 216, 0.3), transparent 70%)',
+              background: 'radial-gradient(circle, rgba(99, 121, 185, 0.3), transparent 70%)',
               animation: 'float 8s ease-in-out infinite',
               filter: 'blur(40px)'
             }} />
@@ -451,7 +451,7 @@ export default function ARPage() {
 
             {/* Animated Grid */}
             <div className="absolute inset-0 opacity-10" style={{
-              backgroundImage: 'linear-gradient(#473C8B 1px, transparent 1px), linear-gradient(90deg, #473C8B 1px, transparent 1px)',
+              backgroundImage: 'linear-gradient(#6379B9 1px, transparent 1px), linear-gradient(90deg, #6379B9 1px, transparent 1px)',
               backgroundSize: '50px 50px',
               animation: 'gridMove 20s linear infinite'
             }} />
@@ -490,7 +490,7 @@ export default function ARPage() {
         >
           {/* Script text overlay */}
           <div style={{
-            backgroundColor: 'rgba(71, 60, 139, 0.95)',
+            backgroundColor: 'rgba(99, 121, 185, 0.95)',
             color: 'white',
             padding: '1rem',
             margin: '1rem',
@@ -551,8 +551,8 @@ export default function ARPage() {
                 disabled={currentScene === 0}
                 style={{
                   backgroundColor: 'white',
-                  color: '#473C8B',
-                  border: '2px solid #473C8B',
+                  color: '#6379B9',
+                  border: '2px solid #6379B9',
                   padding: '0.5rem 1rem',
                   borderRadius: '8px',
                   fontWeight: 'bold',
@@ -569,8 +569,8 @@ export default function ARPage() {
                 disabled={currentScene === scenes.length - 1}
                 style={{
                   backgroundColor: 'white',
-                  color: '#473C8B',
-                  border: '2px solid #473C8B',
+                  color: '#6379B9',
+                  border: '2px solid #6379B9',
                   padding: '0.5rem 1rem',
                   borderRadius: '8px',
                   fontWeight: 'bold',
@@ -586,7 +586,7 @@ export default function ARPage() {
             <p style={{
               textAlign: 'center',
               fontSize: '0.85rem',
-              color: '#473C8B',
+              color: '#6379B9',
               margin: 0
             }}>
               👆 Tap screen to place model
@@ -602,7 +602,7 @@ export default function ARPage() {
                 <div className="text-center space-y-4 mb-12">
                   <h1 className="text-4xl sm:text-5xl font-bold" style={{
                     color: '#1B1B1E',
-                    textShadow: '0 0 20px rgba(138, 127, 216, 0.2)'
+                    textShadow: '0 0 20px rgba(99, 121, 185, 0.2)'
                   }}>
                     WebXR AR Experience
                   </h1>
@@ -643,10 +643,10 @@ export default function ARPage() {
                     background: 'radial-gradient(circle at top, rgba(212, 163, 115, 0.2), transparent 70%)'
                   }} />
 
-                  <div className="mb-6 p-8 relative z-10" style={{color: '#473C8B', fontSize: '1.1rem'}}>
+                  <div className="mb-6 p-8 relative z-10" style={{color: '#6379B9', fontSize: '1.1rem'}}>
                     <p className="mb-4 font-semibold">📱 Current Scene:</p>
                     <p className="font-bold text-xl" style={{
-                      textShadow: '0 0 15px rgba(138, 127, 216, 0.2)'
+                      textShadow: '0 0 15px rgba(99, 121, 185, 0.2)'
                     }}>{scenes[currentScene].model.split('/').pop()}</p>
                   </div>
 
@@ -656,13 +656,13 @@ export default function ARPage() {
                     className="relative px-8 py-4 text-white font-bold rounded-2xl transition-all duration-300 overflow-hidden group"
                     style={{
                       background: (isReady && arSupported)
-                        ? 'linear-gradient(135deg, #473C8B 0%, #6B5FBD 100%)'
+                        ? 'linear-gradient(135deg, #6379B9 0%, #7A8FD1 100%)'
                         : '#ccc',
                       cursor: (isReady && arSupported) ? 'pointer' : 'not-allowed',
                       opacity: (isReady && arSupported) ? 1 : 0.6,
-                      border: '2px solid rgba(138, 127, 216, 0.4)',
+                      border: '2px solid rgba(99, 121, 185, 0.4)',
                       boxShadow: (isReady && arSupported)
-                        ? '0 0 30px rgba(138, 127, 216, 0.3)'
+                        ? '0 0 30px rgba(99, 121, 185, 0.3)'
                         : 'none',
                       textShadow: (isReady && arSupported)
                         ? '0 0 10px rgba(255, 255, 255, 0.5)'
@@ -672,13 +672,13 @@ export default function ARPage() {
                     onMouseEnter={(e) => {
                       if (isReady && arSupported) {
                         e.currentTarget.style.transform = 'scale(1.05)';
-                        e.currentTarget.style.boxShadow = '0 0 40px rgba(138, 127, 216, 0.5)';
+                        e.currentTarget.style.boxShadow = '0 0 40px rgba(99, 121, 185, 0.5)';
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (isReady && arSupported) {
                         e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.boxShadow = '0 0 30px rgba(138, 127, 216, 0.3)';
+                        e.currentTarget.style.boxShadow = '0 0 30px rgba(99, 121, 185, 0.3)';
                       }
                     }}
                   >
@@ -693,9 +693,9 @@ export default function ARPage() {
                 </div>
 
                 <div className="relative rounded-3xl p-8 mb-8 overflow-hidden" style={{
-                  background: 'linear-gradient(135deg, #473C8B 0%, #6B5FBD 100%)',
-                  border: '2px solid rgba(138, 127, 216, 0.4)',
-                  boxShadow: '0 0 30px rgba(138, 127, 216, 0.3)'
+                  background: 'linear-gradient(135deg, #6379B9 0%, #7A8FD1 100%)',
+                  border: '2px solid rgba(99, 121, 185, 0.4)',
+                  boxShadow: '0 0 30px rgba(99, 121, 185, 0.3)'
                 }}>
                   <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
                     background: 'radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.2), transparent 70%)'
@@ -721,7 +721,7 @@ export default function ARPage() {
 
                   <h3 className="font-bold text-xl mb-4 relative z-10" style={{
                     color: '#1B1B1E',
-                    textShadow: '0 0 15px rgba(138, 127, 216, 0.2)'
+                    textShadow: '0 0 15px rgba(99, 121, 185, 0.2)'
                   }}>WebXR Features:</h3>
                   <ul className="space-y-3 mb-4 relative z-10" style={{color: '#8B7355'}}>
                     <li>✅ Surface detection & placement</li>
@@ -731,14 +731,14 @@ export default function ARPage() {
                     <li>✅ Auto-play mode</li>
                   </ul>
                   <div className="p-4 rounded-2xl mb-4 relative z-10" style={{
-                    background: 'rgba(138, 127, 216, 0.15)',
-                    border: '2px solid rgba(138, 127, 216, 0.25)',
+                    background: 'rgba(99, 121, 185, 0.15)',
+                    border: '2px solid rgba(99, 121, 185, 0.25)',
                     backdropFilter: 'blur(10px)'
                   }}>
-                    <p className="text-sm font-bold mb-2" style={{color: '#473C8B'}}>
+                    <p className="text-sm font-bold mb-2" style={{color: '#6379B9'}}>
                       📱 Requirements:
                     </p>
-                    <ul className="text-sm space-y-1" style={{color: '#6B5FBD'}}>
+                    <ul className="text-sm space-y-1" style={{color: '#7A8FD1'}}>
                       <li>• Chrome 79+ or Edge browser</li>
                       <li>• HTTPS connection required</li>
                       <li>• Allow camera permission</li>
@@ -803,3 +803,4 @@ export default function ARPage() {
     </>
   );
 }
+

@@ -583,7 +583,7 @@ export default function ARBPage() {
                   <img src="/1.svg" alt="Petatas Logo" className="h-10" />
                 </div>
                 <div className="flex items-center gap-4">
-                  <a href="/" className="text-sm font-medium transition" style={{color: '#473C8B'}}>
+                  <a href="/" className="text-sm font-medium transition" style={{color: '#6379B9'}}>
                     ← Home
                   </a>
                 </div>
@@ -619,7 +619,7 @@ export default function ARBPage() {
               <div className="rounded-3xl shadow-lg p-8 mb-8 text-center" style={{backgroundColor: 'white', border: '2px solid #D4A373'}}>
                 <div className="mb-6">
                   <div className="text-6xl mb-4">{currentScene === 0 ? '🐊' : '🍌'}</div>
-                  <h3 className="text-2xl font-bold mb-2" style={{color: '#473C8B'}}>
+                  <h3 className="text-2xl font-bold mb-2" style={{color: '#6379B9'}}>
                     {scenes[currentScene].name}
                   </h3>
                   <p className="text-gray-600">
@@ -632,7 +632,7 @@ export default function ARBPage() {
                   disabled={!arSupported || !rendererRef.current}
                   className="px-8 py-4 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
-                    backgroundColor: '#473C8B'
+                    backgroundColor: '#6379B9'
                   }}
                 >
                   👁️ Mulai Pengalaman AR
@@ -640,7 +640,7 @@ export default function ARBPage() {
               </div>
 
               {/* Script Display Card */}
-              <div className="rounded-3xl p-8 mb-8 relative overflow-hidden" style={{backgroundColor: '#473C8B'}}>
+              <div className="rounded-3xl p-8 mb-8 relative overflow-hidden" style={{backgroundColor: '#6379B9'}}>
                 <div className="absolute inset-0 opacity-10" style={{
                   backgroundImage: 'url(/batik.png)',
                   backgroundSize: 'cover'
@@ -673,18 +673,18 @@ export default function ARBPage() {
               {/* Features Info */}
               <div className="rounded-3xl p-8 backdrop-blur-sm mb-8" style={{backgroundColor: 'rgba(212, 163, 115, 0.15)', border: '1px solid #D4A373'}}>
                 <h3 className="font-bold text-xl mb-4" style={{color: '#1B1B1E'}}>Fitur AR:</h3>
-                <ul className="space-y-3 mb-4" style={{color: '#473C8B'}}>
+                <ul className="space-y-3 mb-4" style={{color: '#6379B9'}}>
                   <li>✅ Deteksi permukaan & penempatan 3D</li>
                   <li>✅ Model berputar otomatis</li>
                   <li>✅ Narasi audio text-to-speech</li>
                   <li>✅ Pergantian scene dinamis</li>
                   <li>✅ Storyline budaya Indonesia</li>
                 </ul>
-                <div className="p-4 rounded-lg" style={{backgroundColor: 'rgba(71, 60, 139, 0.1)'}}>
-                  <p className="text-sm font-semibold mb-2" style={{color: '#473C8B'}}>
+                <div className="p-4 rounded-lg" style={{backgroundColor: 'rgba(99, 121, 185, 0.1)'}}>
+                  <p className="text-sm font-semibold mb-2" style={{color: '#6379B9'}}>
                     📱 Requirements:
                   </p>
-                  <ul className="text-sm space-y-1" style={{color: '#473C8B'}}>
+                  <ul className="text-sm space-y-1" style={{color: '#6379B9'}}>
                     <li>• Android device with ARCore</li>
                     <li>• Chrome or Edge browser</li>
                     <li>• HTTPS connection</li>
@@ -731,7 +731,7 @@ export default function ARBPage() {
         >
           {/* Top - Script Display */}
           <div style={{
-            backgroundColor: 'rgba(71, 60, 139, 0.95)',
+            backgroundColor: 'rgba(99, 121, 185, 0.95)',
             color: 'white',
             padding: '1rem',
             margin: '1rem',
@@ -795,8 +795,8 @@ export default function ARBPage() {
                 disabled={currentScene === 0}
                 style={{
                   backgroundColor: currentScene === 0 ? '#ccc' : 'white',
-                  color: '#473C8B',
-                  border: '2px solid #473C8B',
+                  color: '#6379B9',
+                  border: '2px solid #6379B9',
                   padding: '0.5rem 1rem',
                   borderRadius: '8px',
                   fontWeight: 'bold',
@@ -813,8 +813,8 @@ export default function ARBPage() {
                 disabled={currentScene === scenes.length - 1}
                 style={{
                   backgroundColor: currentScene === scenes.length - 1 ? '#ccc' : 'white',
-                  color: '#473C8B',
-                  border: '2px solid #473C8B',
+                  color: '#6379B9',
+                  border: '2px solid #6379B9',
                   padding: '0.5rem 1rem',
                   borderRadius: '8px',
                   fontWeight: 'bold',
@@ -846,7 +846,7 @@ export default function ARBPage() {
             <div style={{
               textAlign: 'center',
               fontSize: '0.85rem',
-              color: '#473C8B',
+              color: '#6379B9',
               marginTop: '0.25rem'
             }}>
               <p style={{ margin: 0, marginBottom: '0.25rem' }}>
@@ -889,3 +889,4 @@ export default function ARBPage() {
     </div>
   );
 }
+
