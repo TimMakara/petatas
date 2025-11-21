@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import BottomNav from "@/components/BottomNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,8 +12,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Lelana - AR Cultural Experience",
-  description: "Jelajahi Budaya dengan Lelana",
+  title: "PETATAS - Platform Gamifikasi Adopsi QRIS Papua",
+  description: "Platform gamifikasi untuk meningkatkan adopsi QRIS di Papua dengan challenges, rewards, dan AI assistant",
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -34,10 +39,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div id="mobile-container">
-          {children}
-          <BottomNav />
-        </div>
+        {children}
       </body>
     </html>
   );
