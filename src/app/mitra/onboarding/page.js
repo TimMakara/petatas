@@ -191,7 +191,7 @@ export default function MitraOnboardingPage() {
         {/* CTA Button */}
         <button
           onClick={handleComplete}
-          className="w-full relative py-4 rounded-2xl font-bold text-lg text-white transition-all duration-300 overflow-hidden group"
+          className="w-full relative py-3.5 rounded-xl font-bold text-base text-white transition-all duration-300 overflow-hidden group"
           style={{
             background: 'linear-gradient(135deg, #6379B9 0%, #7A8FD1 100%)',
             border: '2px solid rgba(99, 121, 185, 0.4)',
@@ -250,5 +250,4 @@ export default function MitraOnboardingPage() {
     </div>
   );
 }
-
 

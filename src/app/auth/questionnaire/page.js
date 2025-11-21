@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronRight, ChevronLeft, User, Briefcase, GraduationCap, Home, Users, ShoppingBag, Coffee, Store, Wrench, Zap, TrendingUp, Heart } from 'lucide-react';
+import { ChevronRight, ChevronLeft, User, Briefcase, GraduationCap, Home, Users, ShoppingBag, Coffee, Store, Wrench, Zap, TrendingUp, Heart, Rocket, Building, Palette, Compass } from 'lucide-react';
 
 export default function QuestionnairePage() {
   const router = useRouter();
@@ -12,12 +12,12 @@ export default function QuestionnairePage() {
     umur: '',
     lokasi: '',
     role: '', // 'pengguna' or 'bisnis'
-    subRole: '',
+    profesi: '',
     frequency: '',
     motivation: '',
+    businessScale: '',
     businessType: '',
     qrisStatus: '',
-    avgTransaction: '',
     challenge: ''
   });
 
@@ -53,7 +53,7 @@ export default function QuestionnairePage() {
       type: 'text',
       icon: User,
       placeholder: 'Kota/Kabupaten',
-      description: 'Untuk menampilkan konten budaya lokal yang relevan'
+      description: 'Untuk menampilkan merchant dan challenge yang relevan'
     }
   ];
 
@@ -63,7 +63,7 @@ export default function QuestionnairePage() {
     question: 'Apa peran Anda?',
     icon: User,
     options: [
-      { value: 'pengguna', label: 'Pengguna', description: 'Saya ingin jelajahi budaya', icon: User },
+      { value: 'pengguna', label: 'Pengguna', description: 'Saya ingin menggunakan QRIS', icon: User },
       { value: 'bisnis', label: 'Pelaku Bisnis', description: 'Saya pemilik usaha/UMKM', icon: Briefcase }
     ]
   };
@@ -74,40 +74,37 @@ export default function QuestionnairePage() {
       id: 'profesi',
       question: 'Apa profesi Anda?',
       icon: GraduationCap,
-      description: 'Ini membantu kami memberikan konten yang relevan untuk Anda',
+      description: 'Ini membantu kami memberikan challenge yang sesuai',
       options: [
-        { value: 'mahasiswa', label: 'Mahasiswa', description: 'Sedang menempuh pendidikan tinggi', icon: GraduationCap },
-        { value: 'pelajar', label: 'Pelajar', description: 'Siswa SMA/SMK sederajat', icon: GraduationCap },
+        { value: 'mahasiswa', label: 'Mahasiswa/Pelajar', description: 'Sedang menempuh pendidikan', icon: GraduationCap },
         { value: 'guru', label: 'Guru/Dosen', description: 'Tenaga pendidik', icon: Users },
-        { value: 'pegawai', label: 'Pegawai/Karyawan', description: 'Bekerja di perusahaan/instansi', icon: Briefcase },
-        { value: 'wirausaha', label: 'Wirausaha', description: 'Pemilik usaha kecil', icon: Store },
+        { value: 'pegawai', label: 'Pegawai Kantoran', description: 'Bekerja di perusahaan/instansi', icon: Briefcase },
         { value: 'irt', label: 'Ibu Rumah Tangga', description: 'Mengurus rumah tangga', icon: Home },
-        { value: 'lainnya', label: 'Lainnya', description: 'Profesi lain', icon: User }
+        { value: 'lainnya', label: 'Pemuda/Lainnya', description: 'Pekerjaan lain', icon: User }
       ]
     },
     {
-      id: 'subRole',
-      question: 'Apa status Anda saat ini?',
-      icon: User,
-      description: 'Membantu kami memahami aktivitas Anda',
+      id: 'frequency',
+      question: 'Seberapa sering Anda gunakan digital payment?',
+      icon: Zap,
+      description: 'E-wallet, mobile banking, QRIS, dll',
       options: [
-        { value: 'aktif_bekerja', label: 'Aktif Bekerja', description: 'Sedang bekerja full time' },
-        { value: 'aktif_belajar', label: 'Aktif Belajar', description: 'Fokus pada pendidikan' },
-        { value: 'keduanya', label: 'Keduanya', description: 'Bekerja sambil belajar' },
-        { value: 'mencari_kerja', label: 'Mencari Kerja', description: 'Sedang mencari pekerjaan' },
-        { value: 'freelance', label: 'Freelance', description: 'Bekerja lepas' }
+        { value: 'sering', label: 'Sering', description: 'Hampir setiap hari' },
+        { value: 'kadang', label: 'Kadang-kadang', description: '2-3x seminggu' },
+        { value: 'jarang', label: 'Jarang', description: 'Sesekali saja' },
+        { value: 'belum', label: 'Belum Pernah', description: 'Masih pakai cash' }
       ]
     },
     {
       id: 'motivation',
-      question: 'Apa yang paling menarik bagi Anda?',
+      question: 'Apa yang paling Anda inginkan dari QRIS?',
       icon: Heart,
-      description: 'Kami ingin tahu apa yang membuat Anda tertarik dengan platform ini',
+      description: 'Motivasi Anda menggunakan pembayaran digital',
       options: [
-        { value: 'budaya', label: 'Belajar Budaya', description: 'Eksplorasi tradisi & cerita lokal' },
-        { value: 'ar', label: 'Teknologi AR', description: 'Pengalaman augmented reality' },
-        { value: 'social', label: 'Komunitas', description: 'Bertemu orang dengan minat sama' },
-        { value: 'konten', label: 'Konten Kreatif', description: 'Membuat & berbagi konten' }
+        { value: 'cepat', label: 'Transaksi Cepat', description: 'Ga perlu antri lama' },
+        { value: 'cashback', label: 'Cashback & Rewards', description: 'Dapat poin dan hadiah' },
+        { value: 'aman', label: 'Lebih Aman', description: 'Ga khawatir uang hilang' },
+        { value: 'praktis', label: 'Praktis', description: 'Ga perlu bawa cash banyak' }
       ]
     }
   ];
@@ -115,21 +112,45 @@ export default function QuestionnairePage() {
   // Branch B: Questions for Pelaku Bisnis  
   const bisnisQuestions = [
     {
+      id: 'businessScale',
+      question: 'Bagaimana skala bisnis Anda?',
+      icon: TrendingUp,
+      description: 'Ukuran usaha Anda saat ini',
+      options: [
+        { value: 'umkm', label: 'UMKM', description: 'Usaha Mikro, Kecil & Menengah', icon: Store },
+        { value: 'warung', label: 'Warung/Kedai', description: 'Usaha rumahan atau warung kecil', icon: Coffee },
+        { value: 'toko', label: 'Toko/Restoran', description: 'Usaha dengan tempat tetap', icon: ShoppingBag },
+        { value: 'freelance', label: 'Freelance/Jasa', description: 'Bekerja sendiri/jasa', icon: User }
+      ]
+    },
+    {
       id: 'businessType',
       question: 'Apa jenis usaha Anda?',
       icon: Store,
-      description: 'Ini membantu kami memberikan tips bisnis yang tepat',
+      description: 'Kategori bisnis Anda',
       options: [
-        { value: 'warung', label: 'Warung Makan/Kopi', description: 'Makanan & minuman skala kecil', icon: Coffee },
+        { value: 'warung', label: 'Warung Makan/Kopi', description: 'Makanan & minuman', icon: Coffee },
         { value: 'retail', label: 'Toko Retail/Sembako', description: 'Toko kelontong & kebutuhan', icon: ShoppingBag },
-        { value: 'restoran', label: 'Restoran/Rumah Makan', description: 'Bisnis kuliner menengah', icon: Coffee },
+        { value: 'restoran', label: 'Restoran/Rumah Makan', description: 'Bisnis kuliner', icon: Coffee },
         { value: 'jasa', label: 'Jasa', description: 'Salon, bengkel, dll', icon: Wrench },
-        { value: 'kerajinan', label: 'Kerajinan/Seni', description: 'Produk kerajinan tangan', icon: Store }
+        { value: 'pedagang', label: 'Pedagang Pasar', description: 'Jualan di pasar', icon: Store }
+      ]
+    },
+    {
+      id: 'qrisStatus',
+      question: 'Status QRIS Anda saat ini?',
+      icon: Zap,
+      description: 'Apakah sudah punya dan pakai QRIS?',
+      options: [
+        { value: 'belum', label: 'Belum Punya QRIS', description: 'Masih pakai cash saja' },
+        { value: 'baru', label: 'Baru Daftar', description: 'Sudah daftar tapi jarang dipakai' },
+        { value: 'aktif', label: 'Aktif Pakai', description: 'Regularly use (3-20 tx/minggu)' },
+        { value: 'power', label: 'Power User', description: 'Heavy user (>20 tx/minggu)' }
       ]
     },
     {
       id: 'challenge',
-      question: 'Apa tantangan terbesar Anda saat ini?',
+      question: 'Apa tantangan terbesar Anda?',
       icon: Heart,
       description: 'Kami ingin membantu mengatasi tantangan Anda',
       options: [
@@ -141,8 +162,21 @@ export default function QuestionnairePage() {
     }
   ];
 
-  // Determine which questions to show based on role
-  const getCurrentQuestions = () => {
+  // Helper function to get questions based on given answers
+  const getCurrentQuestionsForAnswers = (answersObj) => {
+    const allQuestions = [...initialQuestions, roleQuestion];
+    
+    if (answersObj.role === 'pengguna') {
+      return [...allQuestions, ...penggunaQuestions];
+    } else if (answersObj.role === 'bisnis') {
+      return [...allQuestions, ...bisnisQuestions];
+    }
+    
+    return allQuestions;
+  };
+
+  // Calculate current questions based on role - will recalculate when answers.role changes
+  const currentQuestions = (() => {
     const allQuestions = [...initialQuestions, roleQuestion];
     
     if (answers.role === 'pengguna') {
@@ -152,9 +186,7 @@ export default function QuestionnairePage() {
     }
     
     return allQuestions;
-  };
-
-  const currentQuestions = getCurrentQuestions();
+  })();
   const currentQuestion = currentQuestions[currentStep];
   const progress = ((currentStep + 1) / currentQuestions.length) * 100;
 
@@ -168,8 +200,12 @@ export default function QuestionnairePage() {
     };
     setAnswers(newAnswers);
 
+    // If this is the role question, we need to recalculate questions on next render
+    // So we move to next step after state update
+    const newCurrentQuestions = questionId === 'role' ? getCurrentQuestionsForAnswers(newAnswers) : currentQuestions;
+    
     // Move to next question or finish
-    if (currentStep < currentQuestions.length - 1) {
+    if (currentStep < newCurrentQuestions.length - 1) {
       setTimeout(() => {
         setCurrentStep(currentStep + 1);
       }, 300);

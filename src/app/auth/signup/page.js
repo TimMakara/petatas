@@ -87,7 +87,7 @@ export default function SignUpPage() {
                 background: 'radial-gradient(circle, rgba(99, 121, 185, 0.4), transparent 70%)',
                 animation: 'float 6s ease-in-out infinite'
               }} />
-              <img src="/2.svg" alt="Petatas Icon" className="w-24 h-24 relative z-10" style={{
+              <img src="/petatas-mascot.png" alt="Petatas Mascot" className="w-24 h-24 relative z-10 object-contain" style={{
                 filter: 'drop-shadow(0 0 15px rgba(99, 121, 185, 0.3))'
               }} />
             </div>
