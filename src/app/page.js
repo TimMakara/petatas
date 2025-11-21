@@ -42,7 +42,7 @@ export default function Home() {
                 background: 'radial-gradient(circle, rgba(138, 127, 216, 0.4), transparent 70%)',
                 animation: 'float 6s ease-in-out infinite'
               }} />
-              <img src="/2.svg" alt="Lelana Icon" className="w-48 h-48 sm:w-64 sm:h-64 relative z-10" style={{
+              <img src="/2.svg" alt="Petatas Icon" className="w-48 h-48 sm:w-64 sm:h-64 relative z-10" style={{
                 filter: 'drop-shadow(0 0 20px rgba(138, 127, 216, 0.3))',
                 animation: 'float 8s ease-in-out infinite'
               }} />
@@ -50,7 +50,7 @@ export default function Home() {
 
             {/* Title with shimmer effect */}
             <h1 className="text-4xl sm:text-5xl font-bold leading-tight flex justify-center -my-4 relative">
-              <img src="/1.svg" alt="Lelana Logo" className="h-40 sm:h-48" style={{
+              <img src="/1.svg" alt="Petatas Logo" className="h-40 sm:h-48" style={{
                 filter: 'drop-shadow(0 0 15px rgba(138, 127, 216, 0.2))'
               }} />
             </h1>

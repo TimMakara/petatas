@@ -580,7 +580,7 @@ export default function ARBPage() {
             <div className="px-4 sm:px-6 lg:px-8 py-4">
               <div className="max-w-7xl mx-auto flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <img src="/1.svg" alt="Lelana Logo" className="h-10" />
+                  <img src="/1.svg" alt="Petatas Logo" className="h-10" />
                 </div>
                 <div className="flex items-center gap-4">
                   <a href="/" className="text-sm font-medium transition" style={{color: '#473C8B'}}>

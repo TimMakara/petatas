@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Lelana - AR Cultural Experience",
-  description: "Jelajahi Budaya dengan Lelana",
+  title: "Petatas - AR Cultural Experience",
+  description: "Jelajahi Budaya dengan Petatas",
   icons: {
     icon: [
       { url: '/favicon.ico' },

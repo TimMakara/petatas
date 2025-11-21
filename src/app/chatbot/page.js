@@ -6,7 +6,7 @@ export default function ChatbotPage() {
   const [messages, setMessages] = useState([
     {
       role: 'bot',
-      text: 'Halo! Saya Lelana Bot, asisten virtual Pacu Jalur 🚣\n\nSaya bisa menceritakan tentang:\n• Sejarah Pacu Jalur\n• Sungai Batang Kuantan\n• Ornamen perahu\n• Zaman kerajaan\n• Festival modern\n\nSilakan pilih topik atau tanya langsung!'
+      text: 'Halo! Saya Petatas Bot, asisten virtual Pacu Jalur 🚣\n\nSaya bisa menceritakan tentang:\n• Sejarah Pacu Jalur\n• Sungai Batang Kuantan\n• Ornamen perahu\n• Zaman kerajaan\n• Festival modern\n\nSilakan pilih topik atau tanya langsung!'
     }
   ]);
   const [input, setInput] = useState('');
@@ -112,7 +112,7 @@ export default function ChatbotPage() {
         <div className="px-4 sm:px-6 lg:px-8 py-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img src="/1.svg" alt="Lelana Logo" className="h-10" />
+              <img src="/1.svg" alt="Petatas Logo" className="h-10" />
               <h1 className="text-xl font-bold" style={{color: '#473C8B'}}>Chatbot Pacu Jalur</h1>
             </div>
             <div className="flex items-center gap-4">
